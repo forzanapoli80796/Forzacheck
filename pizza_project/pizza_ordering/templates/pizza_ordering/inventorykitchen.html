@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="de"> <!-- Default language is set to German -->
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang-en="Kitchen Inventory" data-lang-de="Kücheninventar">Kücheninventar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #87ceeb;
+            padding: 20px;
+            margin: 0;
+            height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 20px;
+            background-color: #87ceeb;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        input[type="file"],
+        select {
+            width: calc(50% - 12px);
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .language-switcher {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .language-switcher a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #007bff;
+            font-size: 16px;
+        }
+        .language-switcher a:hover {
+            text-decoration: underline;
+        }
+        .home-button {
+            display: block;
+            width: 100px;
+            margin: 20px auto;
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .home-button:hover {
+            background-color: #218838;
+        }
+        .logo-container {
+            text-align: center;
+            margin-bottom: 5px; /* Reduced margin */
+        }
+        .logo {
+            max-width: 150px; /* Smaller size */
+            height: auto;
+        }
+        .full-width {
+    width: 100%;
+    box-sizing: border-box; /* ensures padding and border are included in the width */
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column; /* stacks label and input vertically */
+    width: 100%;
+}
+
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <form action="{% url 'inventory_kitchen' %}" method="post">
+        {% csrf_token %}
+        <h1 data-lang-en="Kitchen Inventory" data-lang-de="Warenbestand Non-Food">Warenbestand Non-Food</h1>
+
+        <div class="form-field">
+            <label for="date" data-lang-en="Date" data-lang-de="Datum">Datum</label>
+            <input type="date" id="date" name="date" required>
+        </div><br>
+
+        <div class="form-field">
+            <label for="location" data-lang-en="Select Location" data-lang-de="Standort wählen">Standort wählen</label>
+            <select name="location" id="location">
+                <option value="select" data-lang-en="select" data-lang-de="wählen">wählen</option>
+                <option value="JP23" data-lang-en="JP23" data-lang-de="JP23">JP23</option>
+                <option value="KP5" data-lang-en="KP5" data-lang-de="KP5">KP5</option>
+                <option value="TS17" data-lang-en="TS17" data-lang-de="TS17">TS17</option>
+            </select>
+        </div><br>
+
+        <div class="form-field">
+            <label for="name" data-lang-en="Name" data-lang-de="Name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Dein Vorname" required>
+        </div><br>
+
+        <div class="item-row">
+            <label for="einwegpapier_zickzack" data-lang-en="Disposable Paper ZickZack (unit 100 pieces)" data-lang-de="Einwegpapier ZickZack (Einheit 100 St.)">Einwegpapier ZickZack (Einheit 100 St.)</label>
+            <input type="number" id="einwegpapier_zickzack" name="einwegpapier_zickzack" min="0" required>
+        </div>
+
+        <div class="item-row">
+            <label for="einweghandschuhe_m" data-lang-en="Disposable Gloves M (unit)" data-lang-de="Einweghandschuhe M (Einheit)">Einweghandschuhe M (Einheit)</label>
+            <input type="number" id="einweghandschuhe_m" name="einweghandschuhe_m" min="0" required>
+        </div>
+
+        <div class="item-row">
+            <label for="einweghandschuhe_l" data-lang-en="Disposable Gloves L (unit)" data-lang-de="Einweghandschuhe L (Einheit)">Einweghandschuhe L (Einheit)</label>
+            <input type="number" id="einweghandschuhe_l" name="einweghandschuhe_l" min="0" required>
+        </div>
+
+        <div class="item-row">
+            <label for="blaue_rolle_papierwischtuch" data-lang-en="Blue Roll Paper Towels (pieces)" data-lang-de="Blaue Rolle Papierwischtuch (Stück)">Blaue Rolle Papierwischtuch (Stück)</label>
+            <input type="number" id="blaue_rolle_papierwischtuch" name="blaue_rolle_papierwischtuch" min="0" required>
+        </div>
+
+        <div class="item-row">
+            <label for="fettloeser_packzu" data-lang-en="Fat Remover PackZu (pieces)" data-lang-de="Fettlöser PackZu (Stück)">Fettlöser PackZu (Stück)</label>
+            <input type="number" id="fettloeser_packzu" name="fettloeser_packzu" min="0" required>
+        </div>
+
+        <div class="item-row">
+            <label for="spuelmittel_packzu" data-lang-en="Dishwashing Detergent PackZu (pieces)" data-lang-de="Spülmittel PackZu (Stück)">Spülmittel PackZu (Stück)</label>
+            <input type="number" id="spuelmittel_packzu" name="spuelmittel_packzu" min="0" required>
+        </div>
+
+        <div class="item-row">
+            <label for="handseife" data-lang-en="Hand Soap (pieces)" data-lang-de="Handseife (Stück)">Handseife (Stück)</label>
+            <input type="number" id="handseife" name="handseife" min="0" required>
+        </div>
+
+        <div class="item-row">
+            <label for="toilettenpapier" data-lang-en="Toilet Paper (pieces)" data-lang-de="Toilettenpapier (Stück)">Toilettenpapier (Stück)</label>
+            <input type="number" id="toilettenpapier" name="toilettenpapier" min="0" required>
+        </div>
+
+        <div class="item-row">
+            <label for="waschpulver" data-lang-en="Laundry Detergent (pieces)" data-lang-de="Waschpulver (Stück)">Waschpulver (Stück)</label>
+            <input type="number" id="waschpulver" name="waschpulver" min="0" required>
+        </div>
+
+        <div class="item-row">
+            <label for="reiniger_spuelmaschine" data-lang-en="Dishwasher Cleaner (pieces)" data-lang-de="Reiniger Spülmaschine (Stück)">Reiniger Spülmaschine (Stück)</label>
+            <input type="number" id="reiniger_spuelmaschine" name="reiniger_spuelmaschine" min="0" required>
+        </div>
+
+        <div class="item-row">
+            <label for="muellsack_gross" data-lang-en="Large Trash Bag (pieces)" data-lang-de="Müllsack groß (Stück)">Müllsack groß (Stück)</label>
+            <input type="number" id="muellsack_gross" name="muellsack_gross" min="0" required>
+        </div>
+
+        <div class="item-row">
+            <label for="muellsack_klein" data-lang-en="Small Trash Bag (pieces)" data-lang-de="Müllsack klein (Stück)">Müllsack klein (Stück)</label>
+            <input type="number" id="muellsack_klein" name="muellsack_klein" min="0" required>
+        </div>
+        <div class="item-row">
+            <label for="bodenreiniger" data-lang-en="Floor Cleaner (pieces)" data-lang-de="Bodenreiniger (Stück)">Bodenreiniger (Stück)</label>
+            <input type="number" id="bodenreiniger" name="bodenreiniger" min="0" required>
+        </div>
+
+        <!-- Add other inventory fields similarly with data-lang-en and data-lang-de attributes -->
+        <div class="form-field">
+            <label for="comments" data-lang-en="Comments" data-lang-de="Kommentare">Kommentare</label>
+            <textarea id="comments" name="comments" rows="4"></textarea>
+        </div><br>
+
+        <input type="submit" value="Senden" data-lang-en="Submit" data-lang-de="Senden">
+    </form>
+</div>
+
+<a href="{% url 'department_shift_selection' %}" class="home-button" data-lang-en="Home" data-lang-de="Startseite">Startseite</a>
+
+<div class="language-switcher">
+    <a href="#" onclick="switchLanguage('en')">English</a> | <a href="#" onclick="switchLanguage('de')">Deutsch</a>
+</div>
+ <div class="logo-container">
+        <img src="{% static 'images/FORZACHECK1_whie.png' %}" alt="Forzacheck Logo" class="logo">
+    </div>
+
+<script>
+    function switchLanguage(language) {
+        document.querySelectorAll('[data-lang-en]').forEach(element => {
+            if (language === 'en') {
+                element.innerHTML = element.getAttribute('data-lang-en');
+            } else {
+                element.innerHTML = element.getAttribute('data-lang-de');
+            }
+        });
+    }
+
+    // Set default language as German
+    switchLanguage('de');
+</script>
+
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Wednesday Kitchen Cleaning</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #87ceeb;
+            padding: 20px;
+            margin: 0;
+            height: 100vh; /* Ensure body covers full viewport height */
+        }
+        h1 {
+            text-align: center;
+            color: #fff; /* White letters */
+            margin-bottom: 20px;
+            background-color: #87ceeb; /* Blue background */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+        }
+        input[type="date"],
+        input[type="text"],
+        select,
+        input[type="checkbox"] {
+            width: calc(50% - 22px); /* Adjust for border width */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+
+        }
+        input[type="checkbox"] {
+            margin-right: 10px;
+            width: auto;
+        }
+        input[type="submit"] {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+            box-sizing: border-box;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .task-list {
+            margin-top: 20px;
+        }
+        .task-list h2 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .task-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .task-item label {
+            margin: 0;
+            color: #666;
+        }
+        .language-switcher {
+            text-align: center;
+            margin-top: 20px;
+            width: 100%;
+        }
+        .language-switcher a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #007bff;
+            font-size: 16px;
+        }
+        .language-switcher a:hover {
+            text-decoration: underline;
+        }
+        .home-button {
+            display: block;
+            width: 100px;
+            margin: 20px auto;
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .home-button:hover {
+            background-color: #218838;
+        }
+        textarea {
+            width: calc(100% - 22px); /* Adjust for border width */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            box-sizing: border-box; /* Ensures padding doesn't affect width */
+        }
+    </style>
+</head>
+<body>
+
+    <form id="wednesday_cleaning_kitchen" action="{% url 'wednesday_cleaning_submit' %}" method="post">
+        {% csrf_token %}
+        <h1 data-lang-en="Wednesday Kitchen Cleaning" data-lang-de="Mittwochs Küchenreinigung">Wednesday Kitchen Cleaning</h1>
+        <label for="date" data-lang-en="Date" data-lang-de="Datum">Date</label>
+        <input type="date" id="date" name="date" required><br>
+        <label for="location" data-lang-en="Select Location" data-lang-de="Standort wählen">Select Location</label>
+        <select name="location" id="location">
+            <option value="JP23">JP23</option>
+        </select>
+        <br>
+        <label for="name" data-lang-en="Name" data-lang-de="Name">Name</label>
+        <input type="text" id="name" name="name" required><br>
+
+        <!-- Tasks with checkboxes -->
+        <h2 data-lang-en="Tasks" data-lang-de="Aufgaben">Tasks</h2>
+
+<div class="task-item">
+    <input type="checkbox" id="empty_clean_fridges" name="empty_clean_fridges" required>
+    <label for="empty_clean_fridges" data-lang-en="Empty both refrigerators of contents and clean them (wet)" data-lang-de="Beide Kühlschränke von Ware befreien und feucht wischen">
+        Empty both refrigerators of contents and clean them (wet)
+    </label><br>
+</div>
+
+<div class="task-item">
+    <input type="checkbox" id="move_clean_behind_fridges" name="move_clean_behind_fridges" required>
+    <label for="move_clean_behind_fridges" data-lang-en="Move both refrigerators and clean the area behind them" data-lang-de="Beide Kühlschränke vorschieben und den hinteren Bereich sauber machen">
+        Move both refrigerators and clean the area behind them
+    </label><br>
+</div>
+
+<div class="task-item">
+    <input type="checkbox" id="wipe_seals" name="wipe_seals" required>
+    <label for="wipe_seals" data-lang-en="Wipe the rubber seals of both refrigerators (wet)" data-lang-de="Die Gummidichtungen beider Kühlschranke feucht abwischen">
+        Wipe the rubber seals of both refrigerators (wet)
+    </label><br>
+</div>
+
+<div class="task-item">
+    <input type="checkbox" id="clean_fridge_surfaces" name="clean_fridge_surfaces" required>
+    <label for="clean_fridge_surfaces" data-lang-en="Clean all surfaces of the refrigerators" data-lang-de="Alle Oberflächen der Kühlschranke sauber machen">
+        Clean all surfaces of the refrigerators
+    </label><br>
+</div>
+
+<div class="task-item">
+    <input type="checkbox" id="wipe_sink" name="wipe_sink" required>
+    <label for="wipe_sink" data-lang-en="Wipe the sink (360 degrees, wet)" data-lang-de="Spüle feucht abwischen (360 Grad)">
+        Wipe the sink (360 degrees, wet)
+    </label><br>
+</div>
+
+<div class="task-item">
+    <input type="checkbox" id="wipe_dishwasher" name="wipe_dishwasher" required>
+    <label for="wipe_dishwasher" data-lang-en="Wipe the dishwasher (wet, outside)" data-lang-de="Spülmaschine feucht abwischen (Außen)">
+        Wipe the dishwasher (wet, outside)
+    </label><br>
+</div>
+
+<div class="task-item">
+    <input type="checkbox" id="clean_pizza_grids" name="clean_pizza_grids" required>
+    <label for="clean_pizza_grids" data-lang-en="Clean pizza grids (brush off, dispose if necessary)" data-lang-de="Pizzagitter sauber machen (abbürsten, ggfls. entsorgen)">
+        Clean pizza grids (brush off, dispose if necessary)
+    </label><br>
+</div>
+
+        <label for="comments" data-lang-en="Comments" data-lang-de="Kommentare">Comments</label>
+        <textarea id="comments" name="comments" rows="4"></textarea>
+
+        <input type="submit" value="Submit" data-lang-en="Submit" data-lang-de="Einreichen">
+    </form>
+<a href="{% url 'department_shift_selection' %}" class="home-button" data-lang-en="Home" data-lang-de="Startseite">Home</a>
+    <div class="language-switcher">
+    <a href="#" onclick="switchLanguage('en')">English</a> |
+    <a href="#" onclick="switchLanguage('de')" >Deutsch</a>
+</div>
+
+
+   <script>
+    // Initial setting for German language
+    switchLanguage('de');
+
+    // Function to switch language
+    function switchLanguage(language) {
+        var elements = document.querySelectorAll('[data-lang-en]');
+        elements.forEach(function(element) {
+            element.innerText = element.getAttribute('data-lang-' + language);
+        });
+
+        var options = document.querySelectorAll('option[data-lang-en]');
+        options.forEach(function(option) {
+            option.innerText = option.getAttribute('data-lang-' + language);
+        });
+
+        document.getElementById('name').placeholder = language === 'en' ? 'Enter your name' : 'Geben Sie Ihren Namen ein';
+        document.querySelector('input[type="submit"]').value = language === 'en' ? 'Submit' : 'Einreichen';
+    }
+</script>
+
+</body>
+</html>

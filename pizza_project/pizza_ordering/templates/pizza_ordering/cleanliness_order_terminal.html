@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sauberkeit und Ordnung - Terminal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #87ceeb;
+            padding: 20px;
+            margin: 0;
+            height: 100vh; /* Ensure body covers full viewport height */
+        }
+        h1 {
+            text-align: center;
+            color: #fff; /* White letters */
+            margin-bottom: 20px;
+            background-color: #87ceeb; /* Blue background */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            color: #555;
+        }
+        input[type="date"],
+        input[type="text"],
+        select {
+            width: calc(50% - 22px); /* Adjust for border width */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            box-sizing: border-box; /* Ensures padding doesn't affect width */
+        }
+        input[type="checkbox"] {
+            margin-right: 10px;
+            width: auto;
+        }
+        input[type="submit"] {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .task-list {
+            margin-top: 20px;
+        }
+        .task-list h2 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .task-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .task-item label {
+            margin: 0;
+            color: #666;
+        }
+        .home-button {
+            display: block;
+            width: 100px;
+            margin: 20px auto;
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .home-button:hover {
+            background-color: #218838;
+        }
+        .language-switcher {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .language-switcher a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #007bff;
+            font-size: 16px;
+        }
+        .language-switcher a:hover {
+            text-decoration: underline;
+        }
+        textarea {
+            width: calc(100% - 22px); /* Adjust for border width */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            box-sizing: border-box; /* Ensures padding doesn't affect width */
+        }
+        .logo-container {
+            text-align: center;
+            margin-bottom: 5px; /* Reduced margin */
+        }
+        .logo {
+            max-width: 150px; /* Smaller size */
+            height: auto;
+        }
+        .hidden {
+            display: none;
+        }
+        input[type="number"] {
+    width: calc(50% - 22px);
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+        input[type="date"],
+
+        select {
+            width: calc(50% - 22px); /* Adjust for border width */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            box-sizing: border-box; /* Ensures padding doesn't affect width */
+        }
+    </style>
+    <script>
+        var currentLanguage = 'de'; // Default language
+
+        function switchLanguage(language) {
+            currentLanguage = language; // Update current language
+            var elements = document.querySelectorAll('[data-lang-en]');
+            elements.forEach(function(element) {
+                element.innerText = element.getAttribute('data-lang-' + language);
+            });
+            // Update dynamically added options
+            var selectOptions = document.querySelectorAll('select option');
+            selectOptions.forEach(function(option) {
+                if (option.getAttribute('data-lang-en')) {
+                    option.textContent = option.getAttribute('data-lang-' + language);
+                }
+            });
+            // Update submit button value
+            var submitButton = document.querySelector('input[type="submit"]');
+            if (submitButton.getAttribute('data-lang-en')) {
+                submitButton.value = submitButton.getAttribute('data-lang-' + language);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            switchLanguage(currentLanguage); // Apply default language on load
+        });
+        function getCalendarWeek(date) {
+            const currentDate = new Date(date);
+            const startDate = new Date(currentDate.getFullYear(), 0, 1);
+            const days = Math.floor((currentDate - startDate) / (24 * 60 * 60 * 1000));
+            const weekNumber = Math.ceil((days + startDate.getDay() + 1) / 7);
+            return weekNumber;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const dateInput = document.getElementById('date');
+            const weekDisplay = document.getElementById('week-display');
+            const weekInput = document.getElementById('week');
+
+            dateInput.addEventListener('change', function() {
+                const weekNumber = getCalendarWeek(dateInput.value);
+                weekDisplay.textContent = `Calendar Week: ${weekNumber}`;
+                weekInput.value = weekNumber;
+                dateInput.classList.add('hidden');
+                weekDisplay.classList.remove('hidden');
+            });
+        });
+
+    </script>
+</head>
+<body>
+
+    <form action="{% url 'cleanliness_order_terminal' %}" method="post">
+        {% csrf_token %}
+        <h1 data-lang-en="Cleanliness and Order - Terminal" data-lang-de="Sauberkeit und Ordnung - Terminal">Sauberkeit und Ordnung - Terminal</h1>
+        <label for="date" data-lang-en="Select Date" data-lang-de="KW der aktuellen Woche auswählen">KW der aktuellen Woche auswählen</label>
+        <input type="date" id="date" name="date" required>
+
+
+        <p id="week-display" class="calendar-week hidden" data-lang-en="Calendar Week: " data-lang-de="Kalenderwoche: ">Kalenderwoche: </p>
+    <input type="hidden" id="week" name="week">
+
+        <label for="location" data-lang-en="Select Location" data-lang-de="Standort wählen">Standort wählen</label>
+        <select name="location" id="location" required>
+            <option value="" disabled selected data-lang-en="select" data-lang-de="wählen">wählen</option>
+            <option value="JP23" data-lang-en="JP23" data-lang-de="JP23">JP23</option>
+            <option value="KP5" data-lang-en="KP5" data-lang-de="KP5">KP5</option>
+            <option value="TS17" data-lang-en="TS17" data-lang-de="TS17">TS17</option>
+        </select>
+
+        <label for="name" data-lang-en="Name" data-lang-de="Name">Name</label>
+        <input type="text" id="name" name="name" placeholder="Dein Vorname" required>
+
+        <label for="floor" data-lang-en="Floor" data-lang-de="Boden">Boden</label>
+        <select id="floor" name="floor" required>
+            <option value="select" data-lang-en="select" data-lang-de="wählen">wählen</option>
+            <option value="good" data-lang-en="Good" data-lang-de="Gut">Gut</option>
+            <option value="poor" data-lang-en="Poor" data-lang-de="Schlecht">Schlecht</option>
+        </select>
+        <textarea id="floor_comment" name="floor_comment" placeholder="Kommentar für Boden"></textarea>
+
+<label for="floor_rating" data-lang-en="Rating (1 to 10)" data-lang-de="Bewertung (1 bis 10)">Bewertung (1 bis 10)</label>
+<input type="number" id="floor_rating" name="floor_rating" min="1" max="10" required>
+<label for="floor_image" data-lang-en="Upload Image" data-lang-de="Bild hochladen">Bild hochladen</label>
+<input type="file" id="floor_image" name="floor_image" accept="image/*">
+<br>
+<br>
+<hr>
+<br>
+
+
+        <label for="tiles" data-lang-en="Tiles" data-lang-de="Fliesen">Fliesen</label>
+        <select id="tiles" name="tiles" required>
+            <option value="select" data-lang-en="select" data-lang-de="wählen">wählen</option>
+            <option value="good" data-lang-en="Good" data-lang-de="Gut">Gut</option>
+            <option value="poor" data-lang-en="Poor" data-lang-de="Schlecht">Schlecht</option>
+        </select>
+        <textarea id="tiles_comment" name="tiles_comment" placeholder="Kommentar für Fliesen" ></textarea>
+        <label for="tiles_rating" data-lang-en="Rating (1 to 10)" data-lang-de="Bewertung (1 bis 10)">Bewertung (1 bis 10)</label>
+<input type="number" id="tiles_rating" name="tiles_rating" min="1" max="10" required>
+<label for="tiles_image" data-lang-en="Upload Image" data-lang-de="Bild hochladen">Bild hochladen</label>
+<input type="file" id="tiles_image" name="tiles_image" accept="image/*">
+<br>
+<br>
+<hr>
+<br>
+
+
+
+        <label for="refrigerator" data-lang-en="Refrigerator" data-lang-de="Kühlschrank">Kühlschrank</label>
+        <select id="refrigerator" name="refrigerator" required>
+            <option value="select" data-lang-en="select" data-lang-de="wählen">wählen</option>
+            <option value="good" data-lang-en="Good" data-lang-de="Gut">Gut</option>
+            <option value="poor" data-lang-en="Poor" data-lang-de="Schlecht">Schlecht</option>
+        </select>
+        <textarea id="refrigerator_comment" name="refrigerator_comment" placeholder="Kommentar für Kühlschrank" ></textarea>
+
+        <label for="refrigerator_rating" data-lang-en="Rating (1 to 10)" data-lang-de="Bewertung (1 bis 10)">Bewertung (1 bis 10)</label>
+<input type="number" id="refrigerator_rating" name="refrigerator_rating" min="1" max="10" required>
+<label for="refrigerator_image" data-lang-en="Upload Image" data-lang-de="Bild hochladen">Bild hochladen</label>
+<input type="file" id="refrigerator_image" name="refrigerator_image" accept="image/*">
+<br>
+<br>
+<hr>
+<br>
+
+
+        <label for="counter" data-lang-en="Counter" data-lang-de="Theke">Theke</label>
+        <select id="counter" name="counter" required>
+            <option value="select" data-lang-en="select" data-lang-de="wählen">wählen</option>
+            <option value="good" data-lang-en="Good" data-lang-de="Gut">Gut</option>
+            <option value="poor" data-lang-en="Poor" data-lang-de="Schlecht">Schlecht</option>
+        </select>
+        <textarea id="counter_comment" name="counter_comment" placeholder="Kommentar für Theke" ></textarea>
+
+        <label for="counter_rating" data-lang-en="Rating (1 to 10)" data-lang-de="Bewertung (1 bis 10)">Bewertung (1 bis 10)</label>
+<input type="number" id="counter_rating" name="counter_rating" min="1" max="10" required>
+<label for="counter_image" data-lang-en="Upload Image" data-lang-de="Bild hochladen">Bild hochladen</label>
+<input type="file" id="counter_image" name="counter_image" accept="image/*">
+<br>
+<br>
+<hr>
+<br>
+
+
+
+        <label for="lamps" data-lang-en="Lamps" data-lang-de="Lampen">Lampen</label>
+        <select id="lamps" name="lamps" required>
+            <option value="select" data-lang-en="select" data-lang-de="wählen">wählen</option>
+            <option value="good" data-lang-en="Good" data-lang-de="Gut">Gut</option>
+            <option value="poor" data-lang-en="Poor" data-lang-de="Schlecht">Schlecht</option>
+        </select>
+        <textarea id="lamps_comment" name="lamps_comment" placeholder="Kommentar für Lampen" ></textarea>
+        <label for="lamps_rating" data-lang-en="Rating (1 to 10)" data-lang-de="Bewertung (1 bis 10)">Bewertung (1 bis 10)</label>
+<input type="number" id="lamps_rating" name="lamps_rating" min="1" max="10" required>
+<label for="lamps_image" data-lang-en="Upload Image" data-lang-de="Bild hochladen">Bild hochladen</label>
+<input type="file" id="lamps_image" name="lamps_image" accept="image/*">
+<br>
+<br>
+<hr>
+<br>
+
+
+
+        <label for="tables_chairs" data-lang-en="Tables / chairs incl legs" data-lang-de="Tische / Stühle inkl. Beine">Tische / Stühle inkl. Beine</label>
+        <select id="tables_chairs" name="tables_chairs" required>
+            <option value="select" data-lang-en="select" data-lang-de="wählen">wählen</option>
+            <option value="good" data-lang-en="Good" data-lang-de="Gut">Gut</option>
+            <option value="poor" data-lang-en="Poor" data-lang-de="Schlecht">Schlecht</option>
+        </select>
+        <textarea id="tables_chairs_comment" name="tables_chairs_comment" placeholder="Kommentar für Tische / Stühle inkl. Beine" ></textarea>
+        <label for="tables_chairs_rating" data-lang-en="Rating (1 to 10)" data-lang-de="Bewertung (1 bis 10)">Bewertung (1 bis 10)</label>
+<input type="number" id="tables_chairs_rating" name="tables_chairs_rating" min="1" max="10" required>
+<label for="tables_chairs_image" data-lang-en="Upload Image" data-lang-de="Bild hochladen">Bild hochladen</label>
+<input type="file" id="tables_chairs_image" name="tables_chairs_image" accept="image/*">
+<br>
+<br>
+<hr>
+<br>
+
+
+        <label for="windows" data-lang-en="Windows inside/outside" data-lang-de="Fenster innen/außen">Fenster innen/außen</label>
+        <select id="windows" name="windows" required>
+            <option value="select" data-lang-en="select" data-lang-de="wählen">wählen</option>
+            <option value="good" data-lang-en="Good" data-lang-de="Gut">Gut</option>
+            <option value="poor" data-lang-en="Poor" data-lang-de="Schlecht">Schlecht</option>
+        </select>
+        <textarea id="windows_comment" name="windows_comment" placeholder="Kommentar für Fenster innen/außen" ></textarea>
+        <label for="windows_rating" data-lang-en="Rating (1 to 10)" data-lang-de="Bewertung (1 bis 10)">Bewertung (1 bis 10)</label>
+<input type="number" id="windows_rating" name="windows_rating" min="1" max="10" required>
+<label for="windows_image" data-lang-en="Upload Image" data-lang-de="Bild hochladen">Bild hochladen</label>
+<input type="file" id="windows_image" name="windows_image" accept="image/*">
+<br>
+<br>
+<hr>
+<br>
+
+        <label for="measures" data-lang-en="other information" data-lang-de="Sonstiges ">Sonstiges</label>
+        <textarea id="measures" name="measures" rows="4"  required></textarea>
+
+        <input type="submit" value="Senden" data-lang-en="Submit" data-lang-de="Senden">
+    </form>
+    <a href="{% url 'management_selection' %}" class="home-button" data-lang-en="Home" data-lang-de="Startseite">Startseite</a>
+
+    <div class="language-switcher">
+        <a href="#" onclick="switchLanguage('en')">English</a> | <a href="#" onclick="switchLanguage('de')">Deutsch</a>
+    </div>
+<div class="logo-container">
+        <img src="{% static 'images/FORZACHECK1_whie.png' %}" alt="Forzacheck Logo" class="logo">
+    </div>
+</body>
+</html>

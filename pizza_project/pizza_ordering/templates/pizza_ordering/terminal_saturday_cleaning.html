@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Terminal Samstag Reinigung</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #87ceeb;
+            padding: 20px;
+            margin: 0;
+            height: 100vh; /* Ensure body covers full viewport height */
+        }
+        h1 {
+            text-align: center;
+            color: #fff; /* White letters */
+            margin-bottom: 20px;
+            background-color: #87ceeb; /* Blue background */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            color: #555;
+        }
+        input[type="date"],
+        input[type="text"],
+        select {
+            width: 50%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input[type="checkbox"] {
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        input[type="submit"] {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .task-list {
+            margin: 20px 0;
+        }
+        .task-list h2 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .task-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .task-item label {
+            margin: 0;
+        }
+        .language-switcher {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .language-switcher a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #007bff;
+            font-size: 16px;
+        }
+        .language-switcher a:hover {
+            text-decoration: underline;
+        }
+        .home-button {
+            display: block;
+            width: 100px;
+            margin: 20px auto;
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .home-button:hover {
+            background-color: #218838;
+        }
+        textarea {
+            width: calc(100% - 22px); /* Adjust for border width */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            box-sizing: border-box; /* Ensures padding doesn't affect width */
+        }
+        .logo-container {
+            text-align: center;
+            margin-bottom: 5px; /* Reduced margin */
+        }
+        .logo {
+            max-width: 150px; /* Smaller size */
+            height: auto;
+        }
+        </style>
+</head>
+
+<body>
+    <form id="terminal_saturday_cleaning_form" action="{% url 'terminal_saturday_cleaning_submit' %}" method="post">
+        {% csrf_token %}
+        <h1 data-lang-en="Terminal Saturday Cleaning Form" data-lang-de="Terminal Samstag Reinigungsformular">Terminal Samstag Reinigungsformular</h1>
+
+        <label for="date" data-lang-en="Date" data-lang-de="Datum">Datum</label>
+        <input type="date" id="date" name="date" required><br>
+
+        <label for="location" data-lang-en="Select Location" data-lang-de="Standort wählen">Standort wählen</label>
+        <select name="location" id="location" onchange="checkLocation()" required>
+            <option value="select" data-lang-en="select" data-lang-de="wählen">wählen</option>
+            <option value="JP23" data-lang-en="JP23" data-lang-de="JP23">JP23</option>
+            <option value="KP5" data-lang-en="KP5" data-lang-de="KP5">KP5</option>
+            <option value="TS17" data-lang-en="TS17" data-lang-de="TS17">TS17</option>
+        </select><br>
+        <label for="name" data-lang-en="Name" data-lang-de="Name">Name</label>
+        <input type="text" id="name" name="name" placeholder="Dein Vorname" required>
+
+        <!-- Tasks for KP5 -->
+        <div class="task-list" id="kp5_tasks" style="display:none;">
+            <h2 data-lang-en="Tasks for KP5" data-lang-de="Aufgaben für KP5">Aufgaben für KP5</h2>
+
+            <div class="task-item">
+                <input type="checkbox" id="dust_bottles_terminal" name="dust_bottles_terminal">
+                <label for="dust_bottles_terminal" data-lang-en="Dust all bottles, all elements at the terminal" data-lang-de="Abstauben aller Flaschen, alle Elemente am Terminal">Abstauben aller Flaschen, alle Elemente am Terminal</label>
+            </div>
+            <div class="task-item">
+                <input type="checkbox" id="water_tree_olivia" name="water_tree_olivia">
+                <label for="water_tree_olivia" data-lang-en="Water tree 'Olivia', 5 liters (only if no water is visible in the collecting tray)" data-lang-de="Baum 'Olivia' gießen, 5 Liter (nur wenn kein Wasser in der Auffangwanne zu sehen ist)">Baum 'Olivia' gießen, 5 Liter (nur wenn kein Wasser in der Auffangwanne zu sehen ist)</label>
+            </div>
+            <div class="task-item">
+                <input type="checkbox" id="clean_table_legs" name="clean_table_legs">
+                <label for="clean_table_legs" data-lang-en="Wet clean table legs" data-lang-de="Füße von den Tischen nass reinigen">Füße von den Tischen nass reinigen</label>
+            </div>
+            <div class="task-item">
+                <input type="checkbox" id="dishwasher_cutlery_container" name="dishwasher_cutlery_container">
+                <label for="dishwasher_cutlery_container" data-lang-en="Put stainless steel cutlery container in the dishwasher" data-lang-de="Edelstahl Behälter Besteck in Spülmaschine">Edelstahl Behälter Besteck in Spülmaschine</label>
+            </div>
+            <div class="task-item">
+                <input type="checkbox" id="clean_areas_under_terminal" name="clean_areas_under_terminal">
+                <label for="clean_areas_under_terminal" data-lang-en="Clean and organize all areas under Terminal Table 1 and 2" data-lang-de="Alle Flächen unter Terminal Tisch 1 und 2 reinigen & sortieren">Alle Flächen unter Terminal Tisch 1 und 2 reinigen & sortieren</label>
+            </div>
+            <div class="task-item">
+                <input type="checkbox" id="clean_drinks_fridge" name="clean_drinks_fridge">
+                <label for="clean_drinks_fridge" data-lang-en="Clean drinks fridge including shelves" data-lang-de="Getränkekühlschrank reinigen inkl. Regalböden">Getränkekühlschrank reinigen inkl. Regalböden</label>
+            </div>
+            <div class="task-item">
+                <input type="checkbox" id="clean_crate_holder" name="clean_crate_holder">
+                <label for="clean_crate_holder" data-lang-en="Remove crate holder, clean behind it and wipe the holder" data-lang-de="Kistenhalterung raus, dahinter nass reinigen, Halterung abwischen">Kistenhalterung raus, dahinter nass reinigen, Halterung abwischen</label>
+            </div>
+            <div class="task-item">
+                <input type="checkbox" id="dust_empty_crates" name="dust_empty_crates">
+                <label for="dust_empty_crates" data-lang-en="Dust empty crates" data-lang-de="Leergut Kisten abstauben">Leergut Kisten abstauben</label>
+            </div>
+            <div class="task-item">
+                <input type="checkbox" id="clean_white_wall_tiles" name="clean_white_wall_tiles">
+                <label for="clean_white_wall_tiles" data-lang-en="Wipe white wall tiles with mop (fresh mop) from top to bottom"
+                    data-lang-de="Weiße Wandfliesen mit Bodenwischer (frischer Mop) von ganz oben bis ganz unten feucht abwischen">
+                    Weiße Wandfliesen mit Bodenwischer (frischer Mop) von ganz oben bis ganz unten feucht abwischen
+                </label>
+            </div>
+
+            <div class="task-item">
+    <input type="checkbox" id="wipe_wall_behind_tables" name="wipe_wall_behind_tables">
+    <label for="wipe_wall_behind_tables" data-lang-en="Wipe the wall behind the standing tables (wet) up to 1.70m height. Do not wipe above as there is no lacquer protection."
+           data-lang-de="Wand hinter den Stehtischen feucht abwischen. Alles bis 1,70 m Höhe, darüber bitte nicht feucht wischen, da dort kein Lackschutz vorhanden ist.">
+        Wand hinter den Stehtischen feucht abwischen. Alles bis 1,70 m Höhe, darüber bitte nicht feucht wischen, da dort kein Lackschutz vorhanden ist.
+    </label>
+</div>
+
+        </div>
+
+        <!-- Tasks for JP23 -->
+<div class="task-list" id="jp23_tasks" style="display:none;">
+    <h2 data-lang-en="Tasks for JP23" data-lang-de="Aufgaben für JP23">Aufgaben für JP23</h2>
+
+    <div class="task-item">
+        <input type="checkbox" id="dust_bottles_terminal_jp23" name="dust_bottles_terminal_jp23" required>
+        <label for="dust_bottles_terminal_jp23" data-lang-en="Dust all bottles, all elements at the terminal" data-lang-de="Abstauben aller Flaschen, alle Elemente am Terminal">Abstauben aller Flaschen, alle Elemente am Terminal</label>
+    </div>
+    <div class="task-item">
+        <input type="checkbox" id="clean_gray_containers_jp23" name="clean_gray_containers_jp23" required>
+        <label for="clean_gray_containers_jp23" data-lang-en="Clean and organize all gray containers under the heat bridge" data-lang-de="Alle grauen Behälter unter Wärmebrücke ausräumen und säubern">Alle grauen Behälter unter Wärmebrücke ausräumen und säubern</label>
+    </div>
+    <div class="task-item">
+        <input type="checkbox" id="clean_black_baseboards_jp23" name="clean_black_baseboards_jp23" required>
+        <label for="clean_black_baseboards_jp23" data-lang-en="Wipe black baseboards" data-lang-de="Schwarze Fußleisten wischen">Schwarze Fußleisten wischen</label>
+    </div>
+    <div class="task-item">
+        <input type="checkbox" id="clean_white_trim_jp23" name="clean_white_trim_jp23" required>
+        <label for="clean_white_trim_jp23" data-lang-en="Wipe white trim" data-lang-de="Weiße Leiste wischen">Weiße Leiste wischen</label>
+    </div>
+    <div class="task-item">
+        <input type="checkbox" id="clean_heat_bridge_shelves_jp23" name="clean_heat_bridge_shelves_jp23" required>
+        <label for="clean_heat_bridge_shelves_jp23" data-lang-en="Clean shelves under the heat bridge" data-lang-de="Regalflächen unter Wärmebrücke reinigen">Regalflächen unter Wärmebrücke reinigen</label>
+    </div>
+    <div class="task-item">
+        <input type="checkbox" id="clean_upper_cabinet_shelves_jp23" name="clean_upper_cabinet_shelves_jp23" required>
+        <label for="clean_upper_cabinet_shelves_jp23" data-lang-en="Clean shelves above the locker" data-lang-de="Regalflächen oberhalb Spind reinigen">Regalflächen oberhalb Spind reinigen</label>
+    </div>
+    <div class="task-item">
+        <input type="checkbox" id="clean_black_surfaces_jp23" name="clean_black_surfaces_jp23" required>
+        <label for="clean_black_surfaces_jp23" data-lang-en="Clean black surfaces behind the heat bridge and boxes" data-lang-de="Schwarze Flächen Rückwand über Wärmebrücke und Kartons nass reinigen">Schwarze Flächen Rückwand über Wärmebrücke und Kartons nass reinigen</label>
+    </div>
+    <div class="task-item">
+        <input type="checkbox" id="clean_tiramisu_fridge_jp23" name="clean_tiramisu_fridge_jp23" required>
+        <label for="clean_tiramisu_fridge_jp23" data-lang-en="Clean Tiramisu fridge inside, outside, and behind" data-lang-de="Tiramisu Kühlschrank innen, außen und hinten nass reinigen">Tiramisu Kühlschrank innen, außen und hinten nass reinigen</label>
+    </div>
+    <div class="task-item">
+        <input type="checkbox" id="clean_black_grid_jp23" name="clean_black_grid_jp23" required>
+        <label for="clean_black_grid_jp23" data-lang-en="Clean the black grid on the locker" data-lang-de="Schwarzes Gitter am Spind reinigen">Schwarzes Gitter am Spind reinigen</label>
+    </div>
+    <div class="task-item">
+        <input type="checkbox" id="clean_area_under_boxes_jp23" name="clean_area_under_boxes_jp23" required>
+        <label for="clean_area_under_boxes_jp23" data-lang-en="Clean the area under the boxes" data-lang-de="Fläche unter Kartons reinigen">Fläche unter Kartons reinigen</label>
+    </div>
+    <div class="task-item">
+        <input type="checkbox" id="clean_trim_above_order_strip_jp23" name="clean_trim_above_order_strip_jp23" required>
+        <label for="clean_trim_above_order_strip_jp23" data-lang-en="Clean trim above order strip" data-lang-de="Leiste über Bonleiste reinigen">Leiste über Bonleiste reinigen</label>
+    </div>
+    <div class="task-item">
+        <input type="checkbox" id="clean_dust_areas_jp23" name="clean_dust_areas_jp23" required>
+        <label for="clean_dust_areas_jp23" data-lang-en="Clean all dust areas on the whiteboard" data-lang-de="Alle Staubflächen am Whiteboard reinigen">Alle Staubflächen am Whiteboard reinigen</label>
+    </div>
+    <div class="task-item">
+        <input type="checkbox" id="clean_areas_under_terminal_jp23" name="clean_areas_under_terminal_jp23" required>
+        <label for="clean_areas_under_terminal_jp23" data-lang-en="Clean all areas under Terminal and Driver tables" data-lang-de="Alle Flächen unter Terminaltisch und Fahrertisch reinigen">Alle Flächen unter Terminaltisch und Fahrertisch reinigen</label>
+    </div>
+    <div class="task-item">
+        <input type="checkbox" id="dishwasher_cutlery_container_jp23" name="dishwasher_cutlery_container_jp23" required>
+        <label for="dishwasher_cutlery_container_jp23" data-lang-en="Put stainless steel cutlery container in the dishwasher" data-lang-de="Edelstahl Behälter Besteck in Spülmaschine">Edelstahl Behälter Besteck in Spülmaschine</label>
+    </div>
+    <div class="task-item">
+        <input type="checkbox" id="clean_small_sink_jp23" name="clean_small_sink_jp23" required>
+        <label for="clean_small_sink_jp23" data-lang-en="Clean the small sink (keys) with water" data-lang-de="Kleines Waschbecken (Schlüssel) nass reinigen">Kleines Waschbecken (Schlüssel) nass reinigen</label>
+    </div>
+</div>
+
+        <!-- Tasks for TS17 -->
+        <div class="task-list" id="ts17_tasks" style="display:none;">
+            <h2 data-lang-en="Tasks for TS17" data-lang-de="Aufgaben für TS17">Aufgaben für TS17</h2>
+
+            <div class="task-item">
+                <input type="checkbox" id="clear_terminal_table" name="clear_terminal_table">
+                <label for="clear_terminal_table" data-lang-en="Clear Terminal Table, wipe it wet" data-lang-de="Terminal Tisch abräumen, nass reinigen">Terminal Tisch abräumen, nass reinigen</label>
+            </div>
+            <div class="task-item">
+                <input type="checkbox" id="wipe_terminal_counter" name="wipe_terminal_counter">
+                <label for="wipe_terminal_counter" data-lang-en="Wipe Terminal Counter wet" data-lang-de="Terminal Theke nass abwischen">Terminal Theke nass abwischen</label>
+            </div>
+            <div class="task-item">
+                <input type="checkbox" id="wipe_chair_legs" name="wipe_chair_legs">
+                <label for="wipe_chair_legs" data-lang-en="Wipe chair legs wet" data-lang-de="Hocker Füße nass reinigen">Hocker Füße nass reinigen</label>
+            </div>
+            <div class="task-item">
+                <input type="checkbox" id="clear_drinks_fridge_top" name="clear_drinks_fridge_top">
+                <label for="clear_drinks_fridge_top" data-lang-en="Clear top of Drinks Fridge, wipe it wet" data-lang-de="Flaschenkühlschrank oben, abräumen und nass abwischen">Flaschenkühlschrank oben, abräumen und nass abwischen</label>
+            </div>
+            <div class="task-item">
+                <input type="checkbox" id="clean_fridge_glassdoor" name="clean_fridge_glassdoor">
+                <label for="clean_fridge_glassdoor" data-lang-en="Clean Fridge Glass Door inside/outside with glass cleaner" data-lang-de="Flaschenkühlschrank Glastür innen/außen mit Glassreiniger">Flaschenkühlschrank Glastür innen/außen mit Glassreiniger</label>
+            </div>
+            <div class="task-item">
+                <input type="checkbox" id="dust_bottles_in_fridge" name="dust_bottles_in_fridge">
+                <label for="dust_bottles_in_fridge" data-lang-en="Dust bottles in the Drinks Fridge" data-lang-de="Flaschen im Flaschenkühlschrank entstauben">Flaschen im Flaschenkühlschrank entstauben</label>
+            </div>
+            <div class="task-item">
+                <input type="checkbox" id="clean_stripe_display" name="clean_stripe_display">
+                <label for="clean_stripe_display" data-lang-en="Clean Stripe Display with glass cleaner" data-lang-de="Stripe Display mit Glasreiniger">Stripe Display mit Glasreiniger</label>
+            </div>
+            <div class="task-item">
+                <input type="checkbox" id="clean_laptop_display" name="clean_laptop_display">
+                <label for="clean_laptop_display" data-lang-en="Clean Laptop Display and keyboard wet" data-lang-de="Laptop Display mit Tastatur feucht abwischen">Laptop Display mit Tastatur feucht abwischen</label>
+            </div>
+            <div class="task-item">
+                <input type="checkbox" id="wipe_wolt_tablet" name="wipe_wolt_tablet">
+                <label for="wipe_wolt_tablet" data-lang-en="Wipe Wolt Tablet wet" data-lang-de="Wolt Tablet feucht abwischen">Wolt Tablet feucht abwischen</label>
+            </div>
+            <div class="task-item">
+                <input type="checkbox" id="clean_divider_windows" name="clean_divider_windows">
+                <label for="clean_divider_windows" data-lang-en="Clean Divider Windows with glass cleaner inside/outside" data-lang-de="Fenster der Trennwand mit Glasreiniger innen/außen">Fenster der Trennwand mit Glasreiniger innen/außen</label>
+            </div>
+            <div class="task-item">
+                <input type="checkbox" id="clean_glass_doors" name="clean_glass_doors">
+                <label for="clean_glass_doors" data-lang-en="Clean glass surfaces of the entrance and wing doors, inside and outside with glass cleaner" data-lang-de="Glasflächen der Eingangstür und der Flügeltüren, innen und außen mit Glasreiniger">Glasflächen der Eingangstür und der Flügeltüren, innen und außen mit Glasreiniger</label>
+            </div>
+        </div>
+
+        <!-- Comment Box -->
+        <label for="comments" data-lang-en="Comments" data-lang-de="Kommentare">Kommentare</label>
+        <textarea id="comments" name="comments" rows="4"></textarea>
+
+        <input type="submit" value="Senden" data-lang-en="Submit" data-lang-de="Senden">
+
+    </form>
+
+    <div class="language-switcher">
+        <a href="#" data-lang="en">English</a>
+        <a href="#" data-lang="de" class="active">Deutsch</a>
+    </div>
+    <a href="{% url 'department_shift_selection' %}" class="home-button" data-lang-en="Home" data-lang-de="Startseite">Startseite</a>
+
+    <div class="logo-container">
+        <img src="{% static 'images/FORZACHECK1_whie.png' %}" alt="Forzacheck Logo" class="logo">
+    </div>
+
+    <script>
+        function checkLocation() {
+            const location = document.getElementById('location').value;
+
+            const jp23Tasks = document.querySelectorAll('#jp23_tasks input[type="checkbox"]');
+            const kp5Tasks = document.querySelectorAll('#kp5_tasks input[type="checkbox"]');
+            const ts17Tasks = document.querySelectorAll('#ts17_tasks input[type="checkbox"]');
+
+            jp23Tasks.forEach(checkbox => checkbox.required = location === 'JP23');
+            kp5Tasks.forEach(checkbox => checkbox.required = location === 'KP5');
+            ts17Tasks.forEach(checkbox => checkbox.required = location === 'TS17');
+
+            document.getElementById('jp23_tasks').style.display = location === 'JP23' ? 'block' : 'none';
+            document.getElementById('kp5_tasks').style.display = location === 'KP5' ? 'block' : 'none';
+            document.getElementById('ts17_tasks').style.display = location === 'TS17' ? 'block' : 'none';
+        }
+
+        function setLanguage(lang) {
+            const elements = document.querySelectorAll('[data-lang-en], [data-lang-de]');
+            elements.forEach(element => {
+                if (lang === 'en') {
+                    element.textContent = element.getAttribute('data-lang-en');
+                } else {
+                    element.textContent = element.getAttribute('data-lang-de');
+                }
+            });
+        }
+
+
+        function switchLanguage(language) {
+            var elements = document.querySelectorAll('[data-lang-en]');
+            elements.forEach(function(element) {
+                element.innerText = element.getAttribute('data-lang-' + language);
+            });
+            // Also update the placeholders for the input fields
+            document.getElementById('name').placeholder = language === 'en' ? 'Enter your name' : 'Dein Vorname';
+            document.querySelector('input[type="submit"]').value = language === 'en' ? 'Submit' : 'Senden';
+
+            // Update active language link
+            var links = document.querySelectorAll('.language-switcher a');
+            links.forEach(function(link) {
+                link.classList.remove('active');
+            });
+            document.querySelector('[data-lang="' + language + '"]').classList.add('active');
+        }
+
+        // Add event listeners to language switcher links
+        document.querySelectorAll('.language-switcher a').forEach(function(link) {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                switchLanguage(this.getAttribute('data-lang'));
+            });
+        });
+
+        // Initialize placeholders
+        switchLanguage('de'); // Default language is German
+    </script>
+</body>
+</html>

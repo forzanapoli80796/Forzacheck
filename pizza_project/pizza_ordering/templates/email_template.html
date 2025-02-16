@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin View</title>
+    <style>
+        body {
+            background-color: white; /* Changed background to white */
+            color: black; /* Changed font color to black */
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            word-wrap: break-word;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        h2, h3 {
+            color: black; /* Ensure headings are black */
+        }
+        #download_Btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            margin: 20px auto;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+        #download_Btn:hover {
+            background-color: #0056b3;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        #download_Btn:active {
+            background-color: #004494;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <h1>Admin View</h1>
+
+    <div id="content">
+    <h2>Cleanliness Orders</h2>
+
+    <!-- Cleanliness Order Kitchen Table -->
+    <h3>Cleanliness Order Kitchen</h3>
+    <table>
+        <thead>
+            <tr>
+               <th>Name</th>
+                <th>Calendar Week</th>
+                <th>Location</th>
+                <th>Tiles Comment</th>
+                <th>Tiles Rating</th> <!-- New -->
+                <th>Tiles Image</th> <!-- New Image Column -->
+                <th>Tables Downstairs Comment</th>
+                <th>Tables Downstairs Rating</th> <!-- New -->
+                <th>Tables Downstairs Image</th> <!-- New Image Column -->
+                <th>Refrigerators Back Comment</th>
+                <th>Refrigerators Back Rating</th> <!-- New -->
+                <th>Refrigerators Back Image</th> <!-- New Image Column -->
+                <th>Bottom Sink Comment</th>
+                <th>Bottom Sink Rating</th> <!-- New -->
+                <th>Bottom Sink Image</th> <!-- New Image Column -->
+                <th>Extractor Hood Comment</th>
+                <th>Extractor Hood Rating</th> <!-- New -->
+                <th>Extractor Hood Image</th> <!-- New Image Column -->
+                <th>Refrigerator Comment</th>
+                <th>Refrigerator Rating</th> <!-- New -->
+                <th>Refrigerator Image</th> <!-- New Image Column -->
+                <th>KAV Comment</th>
+                <th>KAV Rating</th> <!-- New -->
+                <th>KAV Image</th> <!-- New Image Column -->
+                <th>Other Information</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in cleanliness_order_kitchen %}
+            <tr>
+                <td>{{ entry.name }}</td>
+            <td>{{ entry.calendar_week }}</td>
+            <td>{{ entry.location }}</td>
+            <td>{{ entry.tiles_comment }}</td>
+            <td>{{ entry.tiles_rating }}</td> <!-- New -->
+            <td>
+                {% if entry.tiles_image %}
+                    <a href="{{ entry.tiles_image.url }}" target="_blank">View Image</a>
+                {% else %}
+                    No image
+                {% endif %}
+            </td> <!-- New Image Column -->
+            <td>{{ entry.tables_downstairs_comment }}</td>
+            <td>{{ entry.tables_downstairs_rating }}</td> <!-- New -->
+            <td>
+                {% if entry.tables_downstairs_image %}
+                <a href="{{ entry.tables_downstairs_image.url }}" target="_blank">View Image</a>
+                {% else %}
+                    No image
+                {% endif %}
+            </td> <!-- New Image Column -->
+            <td>{{ entry.refrigerators_back_comment }}</td>
+            <td>{{ entry.refrigerators_back_rating }}</td> <!-- New -->
+            <td>
+                {% if entry.refrigerators_back_image %}
+                 <a href="{{ entry.refrigerators_back_image.url }}" target="_blank">View Image</a>
+
+                {% else %}
+                    No image
+                {% endif %}
+            </td> <!-- New Image Column -->
+            <td>{{ entry.bottom_sink_comment }}</td>
+            <td>{{ entry.bottom_sink_rating }}</td> <!-- New -->
+            <td>
+                {% if entry.bottom_sink_image %}
+                    <a href="{{ entry.bottom_sink_image.url }}" target="_blank">View Image</a>
+                {% else %}
+                    No image
+                {% endif %}
+            </td> <!-- New Image Column -->
+            <td>{{ entry.extractor_hood_comment }}</td>
+            <td>{{ entry.extractor_hood_rating }}</td> <!-- New -->
+            <td>
+                {% if entry.extractor_hood_image %}
+                    <a href="{{ entry.extractor_hood_image.url }}" target="_blank">View Image</a>
+                {% else %}
+                    No image
+                {% endif %}
+            </td> <!-- New Image Column -->
+            <td>{{ entry.refrigerator_comment }}</td>
+            <td>{{ entry.refrigerator_rating }}</td> <!-- New -->
+            <td>
+                {% if entry.refrigerator_image %}
+                    <a href="{{ entry.refrigerator_image.url }}" target="_blank">View Image</a>
+                    No image
+                {% endif %}
+            </td> <!-- New Image Column -->
+            <td>{{ entry.kav_comment }}</td>
+            <td>{{ entry.kav_rating }}</td> <!-- New -->
+            <td>
+                {% if entry.kav_image %}
+                    <a href="{{ entry.kav_image.url }}" target="_blank">View Image</a>
+                {% else %}
+                    No image
+                {% endif %}
+            </td> <!-- New Image Column -->
+            <td>{{ entry.measures }}</td>
+        </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Cleanliness Order Terminal Table -->
+    <h3>Cleanliness Order Terminal</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Calendar Week</th>
+            <th>Location</th>
+            <th>Floor Comment</th>
+            <th>Floor Rating</th>
+            <th>Floor Image</th>
+            <th>Tiles Comment</th>
+            <th>Tiles Rating</th>
+            <th>Tiles Image</th>
+            <th>Refrigerator Comment</th>
+            <th>Refrigerator Rating</th>
+            <th>Refrigerator Image</th>
+            <th>Counter Comment</th>
+            <th>Counter Rating</th>
+            <th>Counter Image</th>
+            <th>Lamps Comment</th>
+            <th>Lamps Rating</th>
+            <th>Lamps Image</th>
+            <th>Tables & Chairs Comment</th>
+            <th>Tables & Chairs Rating</th>
+            <th>Tables & Chairs Image</th>
+            <th>Windows Comment</th>
+            <th>Windows Rating</th>
+            <th>Windows Image</th>
+            <th>Other Information</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for entry in cleanliness_order_terminal %}
+        <tr>
+            <td>{{ entry.name }}</td>
+<td>{{ entry.calendar_week }}</td>
+<td>{{ entry.location }}</td>
+<td>{{ entry.floor_comment }}</td>
+<td>{{ entry.floor_rating }}</td>
+<td>
+    {% if entry.floor_image %}
+    <a href="{{ entry.floor_image.url }}" target="_blank">View Floor Image</a>
+    {% else %}
+    No Image
+    {% endif %}
+</td>
+<td>{{ entry.tiles_comment }}</td>
+<td>{{ entry.tiles_rating }}</td>
+<td>
+    {% if entry.tiles_image %}
+    <a href="{{ entry.tiles_image.url }}" target="_blank">View Tiles Image</a>
+    {% else %}
+    No Image
+    {% endif %}
+</td>
+<td>{{ entry.refrigerator_comment }}</td>
+<td>{{ entry.refrigerator_rating }}</td>
+<td>
+    {% if entry.refrigerator_image %}
+    <a href="{{ entry.refrigerator_image.url }}" target="_blank">View Refrigerator Image</a>
+    {% else %}
+    No Image
+    {% endif %}
+</td>
+<td>{{ entry.counter_comment }}</td>
+<td>{{ entry.counter_rating }}</td>
+<td>
+    {% if entry.counter_image %}
+    <a href="{{ entry.counter_image.url }}" target="_blank">View Counter Image</a>
+    {% else %}
+    No Image
+    {% endif %}
+</td>
+<td>{{ entry.lamps_comment }}</td>
+<td>{{ entry.lamps_rating }}</td>
+<td>
+    {% if entry.lamps_image %}
+    <a href="{{ entry.lamps_image.url }}" target="_blank">View Lamps Image</a>
+    {% else %}
+    No Image
+    {% endif %}
+</td>
+<td>{{ entry.tables_chairs_comment }}</td>
+<td>{{ entry.tables_chairs_rating }}</td>
+<td>
+    {% if entry.tables_chairs_image %}
+    <a href="{{ entry.tables_chairs_image.url }}" target="_blank">View Tables & Chairs Image</a>
+    {% else %}
+    No Image
+    {% endif %}
+</td>
+<td>{{ entry.windows_comment }}</td>
+<td>{{ entry.windows_rating }}</td>
+<td>
+    {% if entry.windows_image %}
+    <a href="{{ entry.windows_image.url }}" target="_blank">View Windows Image</a>
+    {% else %}
+    No Image
+    {% endif %}
+</td>
+<td>{{ entry.measures }}</td>
+
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+    <!-- Cleanliness Order Storage Table -->
+    <h3>Cleanliness Order Storage</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Calendar Week</th>
+            <th>Location</th>
+            <th>Floor Comment</th>
+            <th>Floor Rating</th> <!-- Added Floor Rating -->
+            <th>Floor Image</th> <!-- New Column -->
+            <th>Garbage Comment</th>
+            <th>Garbage Rating</th> <!-- Added Garbage Rating -->
+            <th>Garbage Image</th> <!-- New Column -->
+            <th>Tidiness Comment</th>
+            <th>Tidiness Rating</th> <!-- Added Tidiness Rating -->
+            <th>Tidiness Image</th> <!-- New Column -->
+            <th>Inventory Comment</th>
+            <th>Inventory Rating</th> <!-- Added Inventory Rating -->
+            <th>Inventory Image</th> <!-- New Column -->
+            <th>Other Information</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for entry in cleanliness_order_storage %}
+        <tr>
+            <td>{{ entry.name }}</td>
+            <td>{{ entry.calendar_week }}</td>
+            <td>{{ entry.location }}</td>
+            <td>{{ entry.floor_comment }}</td>
+            <td>{{ entry.floor_rating }}</td>
+            <td>
+                {% if entry.floor_image %}
+                <a href="{{ entry.floor_image.url }}" target="_blank">View Floor Image</a>
+                {% else %}
+                No Image
+                {% endif %}
+            </td>
+            <td>{{ entry.garbage_comment }}</td>
+            <td>{{ entry.garbage_rating }}</td>
+            <td>
+                {% if entry.garbage_image %}
+                <a href="{{ entry.garbage_image.url }}" target="_blank">View Garbage Image</a>
+                {% else %}
+                No Image
+                {% endif %}
+            </td>
+            <td>{{ entry.tidiness_comment }}</td>
+            <td>{{ entry.tidiness_rating }}</td>
+            <td>
+                {% if entry.tidiness_image %}
+                <a href="{{ entry.tidiness_image.url }}" target="_blank">View Tidiness Image</a>
+                {% else %}
+                No Image
+                {% endif %}
+            </td>
+            <td>{{ entry.inventory_comment }}</td>
+            <td>{{ entry.inventory_rating }}</td>
+            <td>
+                {% if entry.inventory_image %}
+                <a href="{{ entry.inventory_image.url }}" target="_blank">View Inventory Image</a>
+                {% else %}
+                No Image
+                {% endif %}
+            </td>
+            <td>{{ entry.measures }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+    <!-- Cleanliness Order Apartment Table -->
+    <h3>Cleanliness Order Apartment</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Calendar Week</th>
+                <th>Location</th>
+                <th>Floor Comment</th>
+                <th>Floor Rate</th>
+                <th>Floor Image</th>
+                <th>Shelf Comment</th>
+                <th>Shelf Rate</th>
+                <th>Shelf Image</th>
+                <th>Garbage Comment</th>
+                <th>Garbage Rate</th>
+                <th>Garbage Image</th>
+                <th>Cold Room Comment</th>
+                <th>Cold Room Rate</th>
+                <th>Cold Room Image</th>
+                <th>Washroom/Kitchen Comment</th>
+                <th>Washroom/Kitchen Rate</th>
+                <th>Washroom/Kitchen Image</th>
+                <th>WC Comment</th>
+                <th>WC Rate</th>
+                <th>WC Image</th>
+                <th>Other Information</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in cleanliness_order_apartment %}
+            <tr>
+                <td>{{ entry.name }}</td>
+                <td>{{ entry.calendar_week }}</td>
+                <td>{{ entry.location }}</td>
+                <td>{{ entry.floor_comment }}</td>
+                <td>{{ entry.floor_rate }}</td>
+                <td>
+                {% if entry.floor_image %}
+                <a href="{{ entry.floor_image.url }}" target="_blank">View Image</a>
+                {% else %}
+                No Image
+                {% endif %}
+            </td>
+            <td>{{ entry.shelf_comment }}</td>
+            <td>{{ entry.shelf_rate }}</td>
+            <td>
+                {% if entry.shelf_image %}
+                <a href="{{ entry.shelf_image.url }}" target="_blank">View Image</a>
+                {% else %}
+                No Image
+                {% endif %}
+            </td>
+            <td>{{ entry.garbage_comment }}</td>
+            <td>{{ entry.garbage_rate }}</td>
+            <td>
+                {% if entry.garbage_image %}
+                <a href="{{ entry.garbage_image.url }}" target="_blank">View Image</a>
+                {% else %}
+                No Image
+                {% endif %}
+            </td>
+            <td>{{ entry.cold_room_comment }}</td>
+            <td>{{ entry.cold_room_rate }}</td>
+            <td>
+                {% if entry.cold_room_image %}
+                <a href="{{ entry.cold_room_image.url }}" target="_blank">View Image</a>
+                {% else %}
+                No Image
+                {% endif %}
+            </td>
+            <td>{{ entry.washroom_kitchen_comment }}</td>
+            <td>{{ entry.washroom_kitchen_rate }}</td>
+            <td>
+                {% if entry.washroom_kitchen_image %}
+                <a href="{{ entry.washroom_kitchen_image.url }}" target="_blank">View Image</a>
+                {% else %}
+                No Image
+                {% endif %}
+            </td>
+            <td>{{ entry.wc_comment }}</td>
+            <td>{{ entry.wc_rate }}</td>
+            <td>
+                {% if entry.wc_image %}
+                <a href="{{ entry.wc_image.url }}" target="_blank">View Image</a>
+                {% else %}
+                No Image
+                {% endif %}
+            </td>
+                <td>{{ entry.measures }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+
+    <h3>EBike Admin View</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Location</th>
+                <th>Calendar Week</th>
+                <th>Name</th>
+                <th>Bike Condition</th>
+                <th>Bike Rating</th> <!-- New -->
+                <th>Bike Image</th> <!-- New Image Column -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in ebike_condition_view %}
+            <tr>
+                <td>{{ entry.location }}</td>
+                <td>{{ entry.calendar_week }}</td>
+                <td>{{ entry.name }}</td>
+                <td>{{ entry.bike_condition }}</td>
+                <td>{{ entry.bike_rate }}</td>
+                <td>
+                {% if entry.bike_image %}
+                <a href="{{ entry.bike_image.url }}" target="_blank">View Image</a>
+                {% else %}
+                No Image
+                {% endif %}
+            </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h3>Special Cleaning</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Location</th>
+                    <th>Name</th>
+                    <th>Ventilation</th>
+                    <th>Ventilation Rating</th> <!-- New -->
+                    <th>Ventilation Image</th> <!-- New Image Column -->
+                    <th>Spiderwebs</th>
+                    <th>Spiderwebs Rating</th> <!-- New -->
+                    <th>Spiderwebs Image</th> <!-- New Image Column -->
+                    <th>Washer</th>
+                    <th>Washer Rating</th> <!-- New -->
+                    <th>Washer Image</th> <!-- New Image Column -->
+                    <th>Comments</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in special_cleaning %}
+                <tr>
+                    <td>{{ entry.date }}</td>
+                    <td>{{ entry.location }}</td>
+                    <td>{{ entry.name }}</td>
+                    <td>{{ entry.ventilation }}</td>
+                    <td>{{ entry.ventilation_rate }}</td>
+                    <td>
+                    {% if entry.ventilation_image %}
+                    <a href="{{ entry.ventilation_image.url }}" target="_blank">View Image</a>
+                    {% else %}
+                    No Image
+                    {% endif %}
+                    </td>
+                    <td>{{ entry.spiderwebs }}</td>
+                    <td>{{ entry.spiderwebs_rate }}</td>
+                    <td>
+                    {% if entry.spiderwebs_image %}
+                    <a href="{{ entry.spiderwebs_image.url }}" target="_blank">View Image</a>
+                    {% else %}
+                    No Image
+                    {% endif %}
+                    </td>
+                    <td>{{ entry.washer }}</td>
+                    <td>{{ entry.washer_rate }}</td>
+                    <td>
+                    {% if entry.washer_image %}
+                    <a href="{{ entry.washer_image.url }}" target="_blank">View Image</a>
+                    {% else %}
+                    No Image
+                    {% endif %}
+                    </td>
+                    <td>{{ entry.comments }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+         <h2>Review Checklists</h2>
+        <table>
+            <thead>
+                <tr>
+
+                    <th>Section</th>
+                    <th>Name</th>
+                    <th>Calendar Week</th>
+                    <th>Location</th>
+                    <th>Fulfillment Rate</th>
+                    <th>Measures</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in review_checklists_kitchen %}
+                <tr>
+
+                    <td>Review Checklists Kitchen</td>
+                     <td>{{ entry.name }}</td>
+                    <td>{{ entry.calendar_week }}</td>
+                    <td>{{ entry.location }}</td>
+                    <td>{{ entry.fulfillment_rate }}</td>
+                    <td>{{ entry.measures }}</td>
+                </tr>
+                {% endfor %}
+
+                {% for entry in review_checklists_terminal %}
+                <tr>
+
+                    <td>Review Checklists Terminal</td>
+                    <td>{{ entry.name }}</td>
+                    <td>{{ entry.calendar_week }}</td>
+                    <td>{{ entry.location }}</td>
+                    <td>{{ entry.fulfillment_rate }}</td>
+                    <td>{{ entry.measures }}</td>
+                </tr>
+                {% endfor %}
+
+                {% for entry in review_checklists_storage %}
+                <tr>
+                    <td>Review Checklists Storage</td>
+                    <td>{{ entry.name }}</td>
+                    <td>{{ entry.calendar_week }}</td>
+                    <td>{{ entry.location }}</td>
+                    <td>{{ entry.fulfillment_rate }}</td>
+                    <td>{{ entry.measures }}</td>
+                </tr>
+                {% endfor %}
+
+                {% for entry in review_checklists_apartment %}
+                <tr>
+                    <td>Review Checklists Apartment</td>
+                    <td>{{ entry.name }}</td>
+                    <td>{{ entry.calendar_week }}</td>
+                    <td>{{ entry.location }}</td>
+                    <td>{{ entry.fulfillment_rate }}</td>
+                    <td>{{ entry.measures }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+    <button id="download_Btn">Download</button>
+
+    <!-- Include html2pdf library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    <script>
+        const download_button = document.getElementById('download_Btn');
+        const content = document.getElementById('content');
+
+        download_button.addEventListener('click', async function () {
+            const filename = 'table_data.pdf';
+
+            try {
+                const opt = {
+                    margin: 0.5,
+                    filename: filename,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 4 },
+                    jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape' }
+                };
+                await html2pdf().set(opt).from(content).save();
+            } catch (error) {
+                console.error('Error:', error.message);
+            }
+        });
+    </script>
+</body>
+</html>

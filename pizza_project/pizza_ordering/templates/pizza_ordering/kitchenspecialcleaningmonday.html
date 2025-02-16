@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spezialreinigung der Küche (Montag)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #87ceeb;
+            padding: 20px;
+            margin: 0;
+            height: 100vh; /* Ensure body covers full viewport height */
+        }
+        h1 {
+            text-align: center;
+            color: #fff; /* White letters */
+            margin-bottom: 20px;
+            background-color: #87ceeb; /* Blue background */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            color: #555;
+        }
+        input[type="date"],
+        input[type="text"],
+        select {
+            width: 50%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input[type="checkbox"] {
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        input[type="submit"] {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .task-list {
+            margin: 20px 0;
+        }
+        .task-list h2 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .task-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px; /* Added margin to create space between tasks */
+        }
+        .task-item label {
+            margin: 0;
+        }
+        .language-switcher {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .language-switcher a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #007bff;
+            font-size: 16px;
+        }
+        .language-switcher a:hover {
+            text-decoration: underline;
+        }
+        .home-button {
+            display: block;
+            width: 100px;
+            margin: 20px auto;
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .home-button:hover {
+            background-color: #218838;
+        }
+        textarea {
+            width: calc(100% - 22px); /* Adjust for border width */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            box-sizing: border-box; /* Ensures padding doesn't affect width */
+        }
+        .logo-container {
+            text-align: center;
+            margin-bottom: 5px; /* Reduced margin */
+        }
+        .logo {
+            max-width: 150px; /* Smaller size */
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <form id="kitchen_specialcleaning_monday" action="{% url 'kitchen_specialcleaning_monday_submit' %}" method="post">
+        {% csrf_token %}
+        <h1 data-lang-en="Kitchen Special Cleaning (Monday)" data-lang-de="Spezialreinigung der Küche (Montag)">Spezialreinigung der Küche (Montag)</h1>
+        <label for="date" data-lang-en="Date" data-lang-de="Datum">Datum</label>
+        <input type="date" id="date" name="date" required><br>
+        <label for="location" data-lang-en="Select Location" data-lang-de="Standort wählen">Standort wählen</label>
+        <select name="location" id="location" required>
+            <option value="select" data-lang-en="select" data-lang-de="wählen">wählen</option>
+            <option value="JP23" data-lang-en="JP23" data-lang-de="JP23">JP23</option>
+            <option value="KP5" data-lang-en="KP5" data-lang-de="KP5">KP5</option>
+            <option value="TS17" data-lang-en="TS17" data-lang-de="TS17">TS17</option>
+        </select><br>
+        <label for="name" data-lang-en="Name" data-lang-de="Name">Name</label>
+        <input type="text" id="name" name="name" placeholder="Dein Vorname" required>
+
+        <!-- Common Tasks -->
+        <h2 data-lang-en="Tasks" data-lang-de="Aufgaben">Aufgaben</h2>
+        <div class="task-item">
+    <input type="checkbox" id="task_work_surfaces" name="task_work_surfaces" required>
+    <label for="task_work_surfaces" data-lang-en="Work surfaces completely clear and wipe everything wet" data-lang-de="Arbeitsflächen vollständig abräumen und alles nass wischen">Arbeitsflächen vollständig abräumen und alles nass wischen</label><br>
+</div>
+
+<div class="task-item">
+    <input type="checkbox" id="task_cleaning_materials" name="task_cleaning_materials" required>
+    <label for="task_cleaning_materials" data-lang-en="Check cleaning materials and exchange if necessary" data-lang-de="Reinigungsmaterial überprüfen und ggf. austauschen">Reinigungsmaterial überprüfen und ggf. austauschen</label><br>
+</div>
+        <!-- Specific Tasks for JP23 -->
+<div class="task-item jp23-task" style="display:none;">
+    <input type="checkbox" id="task_clean_cold_room" name="task_clean_cold_room">
+    <label for="task_clean_cold_room" data-lang-en="Clean cold room (remove all items, wet mop the floor)" data-lang-de="Kühlzelle (alles herausnehmen, Boden nass wischen)">
+        Kühlzelle (alles herausnehmen, Boden nass wischen)
+    </label><br>
+</div>
+
+<div class="task-item jp23-task" style="display:none;">
+    <input type="checkbox" id="task_defrost_kav" name="task_defrost_kav">
+    <label for="task_defrost_kav" data-lang-en="Defrost and clean KAV (inside, underneath, and back part against the wall)" data-lang-de="KAV groß abtauen und reinigen (innen, unterhalb, und den hinteren Teil der zu Wand steht)">
+        KAV groß abtauen und reinigen (innen, unterhalb, und den hinteren Teil der zu Wand steht)
+    </label><br>
+</div>
+
+<div class="task-item jp23-task" style="display:none;">
+    <input type="checkbox" id="task_clean_shelves" name="task_clean_shelves">
+    <label for="task_clean_shelves" data-lang-en="Clean shelves (remove all items, wipe all surfaces wet)" data-lang-de="Regale sauber machen (alles entfernen, alle Böden feucht wischen)">
+        Regale sauber machen (alles entfernen, alle Böden feucht wischen)
+    </label><br>
+</div>
+
+<div class="task-item jp23-task" style="display:none;">
+    <input type="checkbox" id="task_clean_shelves_under" name="task_clean_shelves_under">
+    <label for="task_clean_shelves_under" data-lang-en="Clean underneath shelves (wipe wet)" data-lang-de="Regale auch darunter sauber machen (feucht wischen)">
+        Regale auch darunter sauber machen (feucht wischen)
+    </label><br>
+</div>
+
+<div class="task-item jp23-task" style="display:none;">
+    <input type="checkbox" id="task_clean_under_sink" name="task_clean_under_sink">
+    <label for="task_clean_under_sink" data-lang-en="Clean under the sink (remove all items, wet mop the floor)" data-lang-de="Unter der Spüle (alles entfernen, Boden feucht wischen)">
+        Unter der Spüle (alles entfernen, Boden feucht wischen)
+    </label><br>
+</div>
+
+<div class="task-item jp23-task" style="display:none;">
+    <input type="checkbox" id="task_check_cleaning_materials" name="task_check_cleaning_materials">
+    <label for="task_check_cleaning_materials" data-lang-en="Check and replace cleaning materials if necessary" data-lang-de="Reinigungsmaterial überprüfen und ggf. austauschen">
+        Reinigungsmaterial überprüfen und ggf. austauschen
+    </label><br>
+</div>
+
+
+        <!-- Specific Task for KP5 -->
+        <div class="task-item kp5-task" style="display:none;">
+            <input type="checkbox" id="task_oven_surface" name="task_oven_surface">
+            <label for="task_oven_surface" data-lang-en="Oven, shiny surface" data-lang-de="Ofen, Oberfläche glänzend">Ofen, Oberfläche glänzend</label><br>
+        </div>
+
+
+
+        <div class="task-item kp5-task ts17-task">
+    <input type="checkbox" id="task_cooling_cell" name="task_cooling_cell">
+    <label for="task_cooling_cell" data-lang-en="Cooling cell (take everything out, wipe floor wet)"
+           data-lang-de="Kühlzelle (alles herausnehmen, Boden nass wischen)">Kühlzelle (alles herausnehmen, Boden nass wischen)</label><br>
+</div>
+
+<div class="task-item kp5-task ts17-task">
+    <input type="checkbox" id="task_large_cooling_display" name="task_large_cooling_display">
+    <label for="task_large_cooling_display" data-lang-en="Large cooling display cabinet, defrost and clean (inside)"
+           data-lang-de="Kühlaufsatzvitrine groß, abtauen und reinigen (innen)">Kühlaufsatzvitrine groß, abtauen und reinigen (innen)</label><br>
+</div>
+
+<div class="task-item kp5-task ts17-task">
+    <input type="checkbox" id="task_under_sink" name="task_under_sink">
+    <label for="task_under_sink" data-lang-en="Under the sink (take everything out, wipe floor wet)"
+           data-lang-de="Unter der Spüle (alles herausnehmen, Boden nass wischen)">Unter der Spüle (alles herausnehmen, Boden nass wischen)</label><br>
+</div>
+
+<div class="task-item kp5-task ts17-task">
+    <input type="checkbox" id="task_dough_boxes" name="task_dough_boxes">
+    <label for="task_dough_boxes" data-lang-en="Dough boxes (wipe outside with a damp cloth including lid)"
+           data-lang-de="Teigbehälter (außen mit einem feuchten Tuch abwischen, inklusive Deckel)">Teigbehälter (außen mit einem feuchten Tuch abwischen, inklusive Deckel)</label><br>
+</div>
+
+<div class="task-item kp5-task ts17-task">
+    <input type="checkbox" id="task_shelves_dough_machine" name="task_shelves_dough_machine">
+    <label for="task_shelves_dough_machine" data-lang-en="Shelves (take everything out, wipe all floors wet) Dough machine (wipe with a damp cloth, inside and outside)"
+           data-lang-de="Regale (alles herausnehmen, alle Böden nass wischen) Teigmaschine (mit einem feuchten Tuch abwischen, innen und außen)">Regale (alles herausnehmen, alle Böden nass wischen) Teigmaschine (mit einem feuchten Tuch abwischen, innen und außen)</label><br>
+</div>
+
+
+        <label for="comments" data-lang-en="Comments" data-lang-de="Kommentare">Kommentare</label>
+        <textarea id="comments" name="comments" rows="4"></textarea>
+
+
+        <input type="submit" value="Senden" data-lang-en="Submit" data-lang-de="Senden">
+    </form>
+    <div class="language-switcher">
+        <a href="#" data-lang="en">English</a>
+        <a href="#" data-lang="de" class="active">Deutsch</a>
+    </div>
+     <a href="{% url 'department_shift_selection' %}" class="home-button" data-lang-en="Home" data-lang-de="Startseite">Startseite</a>
+
+    <div class="logo-container">
+        <img src="{% static 'images/FORZACHECK1_whie.png' %}" alt="Forzacheck Logo" class="logo">
+    </div>
+
+ <script>
+    // Existing language switcher and form submission prevention code
+
+// Updated task showing and validation script
+document.getElementById('location').addEventListener('change', function () {
+    var location = this.value;
+
+    // Hide all specific tasks initially
+    document.querySelectorAll('.kp5-task, .ts17-task, .jp23-task').forEach(function (el) {
+        el.style.display = 'none';
+        el.querySelector('input[type="checkbox"]').required = false; // Remove required attribute
+    });
+
+    // Show and make specific tasks required based on location
+    if (location === 'KP5') {
+        document.querySelectorAll('.kp5-task').forEach(function (el) {
+            el.style.display = 'flex';
+            el.querySelector('input[type="checkbox"]').required = true; // Add required attribute
+        });
+    } else if (location === 'TS17') {
+        document.querySelectorAll('.ts17-task').forEach(function (el) {
+            el.style.display = 'flex';
+            el.querySelector('input[type="checkbox"]').required = true; // Add required attribute
+        });
+    } else if (location === 'JP23') {
+        document.querySelectorAll('.jp23-task').forEach(function (el) {
+            el.style.display = 'flex';
+            el.querySelector('input[type="checkbox"]').required = true; // Add required attribute
+        });
+    }
+});
+
+// Set the default language to German on page load
+document.addEventListener("DOMContentLoaded", function() {
+    switchLanguage("de");
+});
+
+// Function to switch languages
+function switchLanguage(language) {
+    document.querySelectorAll("[data-lang-en], [data-lang-de]").forEach(function(el) {
+        if (language === "de") {
+            el.textContent = el.getAttribute("data-lang-de");
+        } else {
+            el.textContent = el.getAttribute("data-lang-en");
+        }
+    });
+}
+
+// Language switcher event listener
+document.querySelector('.language-switcher').addEventListener('click', function(e) {
+    e.preventDefault();
+    if (e.target.tagName === 'A') {
+        var lang = e.target.getAttribute('data-lang');
+        switchLanguage(lang);
+        document.querySelectorAll('.language-switcher a').forEach(function(link) {
+            link.classList.remove('active');
+        });
+        e.target.classList.add('active');
+    }
+});
+
+</script>
+</body>
+</html>

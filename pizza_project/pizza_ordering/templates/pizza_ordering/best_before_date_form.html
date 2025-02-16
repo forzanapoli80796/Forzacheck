@@ -1,0 +1,209 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Prüfung des Mindesthaltbarkeitsdatums</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #87ceeb;
+            padding: 20px;
+            margin: 0;
+            height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 20px;
+            background-color: #87ceeb;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            color: #555;
+        }
+        input[type="date"],
+        select {
+            width: calc(50% - 22px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input[type="checkbox"] {
+            margin-right: 10px;
+            width: auto;
+        }
+        input[type="submit"] {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .task-list {
+            margin-top: 20px;
+        }
+        .task-list h2 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .task-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .task-item label {
+            margin: 0;
+            color: #666;
+        }
+        .home-button {
+            display: block;
+            width: 100px;
+            margin: 20px auto;
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .home-button:hover {
+            background-color: #218838;
+        }
+        .language-switcher {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .language-switcher a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #007bff;
+            font-size: 16px;
+        }
+        .language-switcher a:hover {
+            text-decoration: underline;
+        }
+        textarea {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .logo-container {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+        .logo {
+            max-width: 150px;
+            height: auto;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+    <script>
+        function switchLanguage(lang) {
+            var elements = document.querySelectorAll('[data-lang-en], [data-lang-de]');
+            elements.forEach(function(element) {
+                var textKey = 'data-lang-' + lang;
+                if (element.hasAttribute(textKey)) {
+                    element.innerHTML = element.getAttribute(textKey);
+                }
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            switchLanguage('de'); // Set default language to German
+        });
+    </script>
+</head>
+<body>
+
+    <form action="{% url 'best_before_date_check' %}" method="post">
+        {% csrf_token %}
+        <h1 data-lang-en="Best Before Date Check" data-lang-de="Prüfung des Mindesthaltbarkeitsdatums">Prüfung des Mindesthaltbarkeitsdatums</h1>
+
+        <!-- Location selection -->
+        <div class="form-group">
+            <label for="location" data-lang-en="Select Location" data-lang-de="Standort auswählen">Standort auswählen</label>
+            <select name="location" id="location" onchange="checkLocation()" required>
+                <option value="select" data-lang-en="select" data-lang-de="wählen">wählen</option>
+                <option value="JP23" data-lang-en="JP23" data-lang-de="JP23">JP23</option>
+                <option value="KP5" data-lang-en="KP5" data-lang-de="KP5">KP5</option>
+                <option value="TS17" data-lang-en="TS17" data-lang-de="TS17">TS17</option>
+            </select>
+        </div>
+
+        <!-- Checkboxes for tasks -->
+        <div class="task-item">
+            <input type="checkbox" id="cured_meats_checked" name="cured_meats_checked" required>
+            <label for="cured_meats_checked" data-lang-en=" All sausage products checked for best before date (old goods to the front, new goods to the back)" data-lang-de="Alle Wurstwaren auf MHD überprüft (Alte Ware nach vorne, Neue Ware nach hinten)">Alle Wurstwaren auf MHD überprüft (Alte Ware nach vorne, Neue Ware nach hinten)</label>
+        </div>
+        <div class="task-item">
+            <input type="checkbox" id="cheese_checked" name="cheese_checked" required>
+            <label for="cheese_checked" data-lang-en="All cheese products checked for best before date (old goods to the front, new goods to the back)" data-lang-de="Alle Käseprodukte auf MHD überprüft (Alte Ware nach vorne, Neue Ware nach hinten)">Alle Käseprodukte auf MHD überprüft (Alte Ware nach vorne, Neue Ware nach hinten)</label>
+        </div>
+        <div class="task-item">
+            <input type="checkbox" id="vegan_cheese_checked" name="vegan_cheese_checked" required>
+            <label for="vegan_cheese_checked" data-lang-en="Vegan cheese checked for best before date (old goods to the front, new goods to the back)" data-lang-de="Käse vegan auf MHD überprüft (Alte Ware nach vorne, Neue Ware nach hinten)">Käse vegan auf MHD überprüft (Alte Ware nach vorne, Neue Ware nach hinten)</label>
+        </div>
+
+        <!-- Latest best before date in cold store -->
+        <div class="form-group">
+            <label for="latest_best_before_date" data-lang-en="Which best before date is the most recent and will soon expire?" data-lang-de="Welches MHD ist das jüngste und läuft bald ab?">Welches MHD ist das jüngste und läuft bald ab?</label>
+            <input type="date" id="latest_best_before_date" name="latest_best_before_date" required>
+        </div>
+
+        <!-- What item is this? -->
+        <div class="form-group">
+    <label data-lang-en="What item is this?" data-lang-de="Um welchen Artikel handelt es sich?">
+        Um welchen Artikel handelt es sich?
+    </label>
+    <textarea name="expired" id="expired" rows="4" placeholder="Artikel eingeben" required></textarea>
+</div>
+
+
+        <!-- Submit button -->
+        <input type="submit" value="Senden" data-lang-en="Submit" data-lang-de="Senden">
+    </form>
+
+    <a href="{% url 'department_shift_selection' %}" class="home-button" data-lang-en="Home" data-lang-de="Startseite">Startseite</a>
+
+    <div class="language-switcher">
+        <a href="#" onclick="switchLanguage('en')">English</a> | <a href="#" onclick="switchLanguage('de')">Deutsch</a>
+    </div>
+
+    <div class="logo-container">
+        <img src="{% static 'images/FORZACHECK1_whie.png' %}" alt="Forzacheck Logo" class="logo">
+    </div>
+
+</body>
+</html>

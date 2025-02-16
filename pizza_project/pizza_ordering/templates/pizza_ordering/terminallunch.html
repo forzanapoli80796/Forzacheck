@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal Lunch Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #87ceeb;
+            padding: 20px;
+            margin: 0;
+            height: 100vh; /* Ensure body covers full viewport height */
+        }
+        h1 {
+            text-align: center;
+            color: #fff; /* White letters */
+            margin-bottom: 20px;
+            background-color: #87ceeb; /* Blue background */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            color: #555;
+        }
+        input[type="date"],
+        input[type="text"],
+        select {
+            width: 50%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        input[type="submit"] {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .task-list {
+            margin: 20px 0;
+        }
+        .task-list h2 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .task-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .task-item label {
+            margin: 0;
+            line-height: 1.5; /* Ensures checkbox labels are spaced properly */
+        }
+        .language-switcher {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .language-switcher a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #007bff;
+            font-size: 16px;
+        }
+        .language-switcher a:hover {
+            text-decoration: underline;
+        }
+        .home-button {
+            display: block;
+            width: 100px;
+            margin: 20px auto;
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .home-button:hover {
+            background-color: #218838;
+        }
+        textarea {
+            width: calc(100% - 22px); /* Adjust for border width */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            box-sizing: border-box; /* Ensures padding doesn't affect width */
+        }
+        .logo-container {
+            text-align: center;
+            margin-bottom: 5px; /* Reduced margin */
+        }
+        .logo {
+            max-width: 150px; /* Smaller size */
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <form id="terminal_lunch_form" action="{% url 'terminal_lunch_submit' %}" method="post">
+        {% csrf_token %}
+        <h1 data-lang-en="Terminal Lunch Shift Form" data-lang-de="Formular für die Mittagsschicht am Terminal">Formular für die Mittagsschicht am Terminal</h1>
+        <label for="date" data-lang-en="Date" data-lang-de="Datum">Date</label>
+        <input type="date" id="date" name="date" required><br>
+        <label for="location" data-lang-en="Select Location" data-lang-de="Standort wählen">Select Location</label>
+       <select name="location" id="location" onchange="toggleTasks()">
+            <option value="select" data-lang-en="select" data-lang-de="wählen">select</option>
+            <option value="JP23" data-lang-en="JP23" data-lang-de="JP23">JP23</option>
+            <option value="KP5" data-lang-en="KP5" data-lang-de="KP5">KP5</option>
+            <option value="TS17" data-lang-en="TS17" data-lang-de="TS17">TS17</option>
+        </select><br>
+        <label for="name" data-lang-en="Name" data-lang-de="Name">Name</label>
+        <input type="text" id="name" name="name" required><br>
+
+        <!-- Tasks with checkboxes -->
+        <h2 data-lang-en="Tasks" data-lang-de="Aufgaben">Tasks</h2>
+
+        <!-- Common Tasks -->
+        <div class="task-item" id="setup-list-task">
+            <input type="checkbox" id="setup-list" name="setup-list">
+            <label for="setup-list" data-lang-en="Set-up list correctly executed and checked" data-lang-de="Aufbauliste korrekt ausgeführt und überprüft">Set-up list correctly executed and checked</label>
+        </div>
+
+        <div class="task-item">
+            <input type="checkbox" id="webshop-live" name="webshop-live" required>
+            <label for="webshop-live" data-lang-en="Webshop is live and has a 30-minute delivery time" data-lang-de="Webshop ist live und hat eine 30-minütige Lieferzeit">Webshop is live and has a 30-minute delivery time</label>
+        </div>
+
+        <div class="task-item">
+            <input type="checkbox" id="lieferando-live" name="lieferando-live" required>
+            <label for="lieferando-live" data-lang-en="Lieferando is live and has a 30-minute delivery time" data-lang-de="Lieferando ist live und hat eine 30-minütige Lieferzeit">Lieferando is live and has a 30-minute delivery time</label>
+        </div>
+
+        <div class="task-item">
+            <input type="checkbox" id="wolt-tablet-live" name="wolt-tablet-live" required>
+            <label for="wolt-tablet-live" data-lang-en="Wolt tablet is live" data-lang-de="Wolt Tablet ist live">Wolt tablet is live</label>
+        </div>
+
+        <div class="task-item">
+            <input type="checkbox" id="lobby-clean" name="lobby-clean" required>
+            <label for="lobby-clean" data-lang-en="Lobby is clean (floor swept, dirt mat without flour)" data-lang-de="Lobby ist sauber (Boden gekehrt, Schmutzfangmatte ohne Mehl)">Lobby is clean (floor swept, dirt mat without flour)</label>
+        </div>
+
+        <div class="task-item">
+            <input type="checkbox" id="outside-area-checked" name="outside-area-checked" required>
+            <label for="outside-area-checked" data-lang-en="Outside area checked (no garbage, no cigarette butts)" data-lang-de="Außenbereich überprüft (kein Müll, keine Zigarettenstummel)">Outside area checked (no garbage, no cigarette butts)</label>
+        </div>
+
+        <!-- Additional Tasks for All Locations -->
+        <div class="task-item">
+            <input type="checkbox" id="beverages-fridge-filled" name="beverages-fridge-filled" required>
+            <label for="beverages-fridge-filled" data-lang-en="Beverages fridge correctly filled" data-lang-de="Getränke Kühlschrank korrekt aufgefüllt">Getränke Kühlschrank korrekt aufgefüllt</label>
+        </div>
+
+        <div class="task-item">
+            <input type="checkbox" id="desserts-fridge-filled" name="desserts-fridge-filled" required>
+            <label for="desserts-fridge-filled" data-lang-en="Desserts fridge correctly filled" data-lang-de="Desserts Kühlschrank korrekt aufgefüllt">Desserts Kühlschrank korrekt aufgefüllt</label>
+        </div>
+
+        <div class="task-item">
+            <input type="checkbox" id="shop-and-lieferando-online" name="shop-and-lieferando-online" required>
+            <label for="shop-and-lieferando-online" data-lang-en="Shop and Lieferando online" data-lang-de="Shop und Lieferando online">Shop und Lieferando online</label>
+        </div>
+        <!-- Tiramisù MHD überprüft Checkbox -->
+<div class="task-item">
+    <input type="checkbox" id="tiramisu_mhd_checked" name="tiramisu_mhd_checked" data-location="all">
+    <label for="tiramisu_mhd_checked" data-lang-en="Tiramisù MHD checked" data-lang-de="Tiramisù MHD überprüft">Tiramisù MHD überprüft</label>
+</div>
+        <div class="task-item">
+    <label for="boden_gastraum_cleaned" data-lang-en="Floor of guest room cleaned" data-lang-de="Boden Gastraum nass gereinigt">Boden Gastraum nass gereinigt</label>
+    <select name="boden_gastraum_cleaned" id="boden_gastraum_cleaned" required>
+        <option value="select" data-lang-en="select" data-lang-de="wählen" disabled selected>wählen</option>
+        <option value="yes" data-lang-en="Yes" data-lang-de="Ja">Ja</option>
+        <option value="no" data-lang-en="No" data-lang-de="Nein">Nein</option>
+    </select>
+</div>
+
+        <label for="comments" data-lang-en="Comments" data-lang-de="Kommentare">Comments</label>
+        <textarea id="comments" name="comments" rows="4"></textarea>
+
+        <input type="submit" value="Submit" data-lang-en="Submit" data-lang-de="Senden">
+    </form>
+    <a href="{% url 'department_shift_selection' %}" class="home-button" data-lang-en="Home" data-lang-de="Startseite">Home</a>
+    <div class="language-switcher">
+        <a href="#" onclick="switchLanguage('en')">English</a> | <a href="#" onclick="switchLanguage('de')">Deutsch</a>
+    </div>
+    <div class="logo-container">
+        <img src="{% static 'images/FORZACHECK1_whie.png' %}" alt="Forzacheck Logo" class="logo">
+    </div>
+
+    <script>
+        // Function to toggle the visibility of the "Set-up list" task based on location
+        function toggleTasks() {
+            var location = document.getElementById("location").value;
+            var setupListTask = document.getElementById("setup-list-task");
+
+            // Hide "Set-up list correctly executed and checked" for TS17
+            if (location === "TS17") {
+                setupListTask.style.display = "none";
+            } else {
+                setupListTask.style.display = "flex"; // Show for other locations
+            }
+        }
+
+        // JavaScript function to switch language
+        function switchLanguage(language) {
+            var elements = document.querySelectorAll('[data-lang-en]');
+            elements.forEach(function(element) {
+                element.innerText = element.getAttribute('data-lang-' + language);
+            });
+
+            var options = document.querySelectorAll('option[data-lang-en]');
+            options.forEach(function(option) {
+                option.innerText = option.getAttribute('data-lang-' + language);
+            });
+
+            document.getElementById('name').placeholder = language === 'en' ? 'Enter your name' : 'Dein Vorname';
+            document.querySelector('input[type="submit"]').value = language === 'en' ? 'Submit' : 'Senden';
+        }
+
+        // Set initial language to German
+        switchLanguage('de');
+    </script>
+</body>
+</html>

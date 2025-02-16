@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Terminal Late Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #87ceeb;
+            padding: 20px;
+            margin: 0;
+            height: 100vh; /* Ensure body covers full viewport height */
+        }
+        h1 {
+            text-align: center;
+            color: #fff; /* White letters */
+            margin-bottom: 20px;
+            background-color: #87ceeb; /* Blue background */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            color: #555;
+        }
+        input[type="date"],
+        input[type="text"],
+        select {
+            width: 50%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input[type="checkbox"] {
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        input[type="submit"] {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .task-list {
+            margin: 20px 0;
+        }
+        .task-list h2 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .task-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .task-item label {
+            margin: 0;
+        }
+        .language-switcher {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .language-switcher a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #007bff;
+            font-size: 16px;
+        }
+        .language-switcher a:hover {
+            text-decoration: underline;
+        }
+        .home-button {
+            display: block;
+            width: 100px;
+            margin: 20px auto;
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .home-button:hover {
+            background-color: #218838;
+        }
+        textarea {
+            width: calc(100% - 22px); /* Adjust for border width */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            box-sizing: border-box; /* Ensures padding doesn't affect width */
+        }
+        .logo-container {
+            text-align: center;
+            margin-bottom: 5px; /* Reduced margin */
+        }
+        .logo {
+            max-width: 150px; /* Smaller size */
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <form id="terminal_late_form" action="{% url 'terminal_late_submit' %}" method="post">
+        {% csrf_token %}
+        <h1 data-lang-en="Terminal Late Shift Form" data-lang-de="Terminal-Spätschichtformular">Terminal-Spätschichtformular</h1>
+        <label for="date" data-lang-en="Date" data-lang-de="Datum">Datum</label>
+        <input type="date" id="date" name="date" required><br>
+        <label for="location" data-lang-en="Select Location" data-lang-de="Standort wählen">Standort wählen</label>
+        <select name="location" id="location" onchange="checkLocation()" required>
+            <option value="select" data-lang-en="select" data-lang-de="wählen">wählen</option>
+            <option value="JP23" data-lang-en="JP23" data-lang-de="JP23">JP23</option>
+            <option value="KP5" data-lang-en="KP5" data-lang-de="KP5">KP5</option>
+            <option value="TS17" data-lang-en="TS17" data-lang-de="TS17">TS17</option>
+        </select><br>
+        <label for="name" data-lang-en="Name" data-lang-de="Name">Name</label>
+        <input type="text" id="name" name="name" placeholder="Dein Vorname" required>
+
+        <!-- Tasks with checkboxes -->
+        <h2 data-lang-en="Tasks" data-lang-de="Aufgaben">Aufgaben</h2>
+
+<!--        <div class="task-item">-->
+<!--            <input type="checkbox" id="dismantling_list_correctly_executed" name="dismantling_list_correctly_executed" data-location="all" required>-->
+<!--            <label for="dismantling_list_correctly_executed" data-lang-en="Dismantling list correctly executed and checked" data-lang-de="Liste für Schichtende korrekt ausgeführt und überprüft">Liste für Schichtende korrekt ausgeführt und überprüft</label>-->
+<!--        </div>-->
+        <div class="task-item">
+            <input type="checkbox" id="all_shops_reset_to_30_minute_delivery" name="all_shops_reset_to_30_minute_delivery" data-location="all" required>
+            <label for="all_shops_reset_to_30_minute_delivery" data-lang-en="All shops reset to 30-minute delivery time" data-lang-de="Alle Shops auf 30 Minuten Lieferzeit zurücksetzen">Alle Shops auf 30 Minuten Lieferzeit zurücksetzen</label>
+        </div>
+        <div class="task-item">
+            <input type="checkbox" id="driver_tasks_distributed_and_checked" name="driver_tasks_distributed_and_checked" data-location="all" required>
+            <label for="driver_tasks_distributed_and_checked" data-lang-en="Driver tasks were distributed and checked" data-lang-de="Fahreraufgaben wurden verteilt und überprüft">Fahreraufgaben wurden verteilt und überprüft</label>
+        </div>
+        <div class="task-item">
+            <input type="checkbox" id="close_the_cash_register" name="close_the_cash_register" data-location="all" required>
+            <label for="close_the_cash_register" data-lang-en="Close the cash register" data-lang-de="Kasse schließen">Kasse schließen</label>
+        </div>
+
+        <!-- New tasks -->
+        <div class="task-item">
+            <input type="checkbox" id="drinks_fridge_correctly_stocked" name="drinks_fridge_correctly_stocked" data-location="all" required>
+            <label for="drinks_fridge_correctly_stocked" data-lang-en="Drinks fridge correctly stocked" data-lang-de="Getränke Kühlschrank korrekt aufgefüllt">Getränke Kühlschrank korrekt aufgefüllt</label>
+        </div>
+        <div class="task-item">
+            <input type="checkbox" id="desserts_fridge_correctly_stocked" name="desserts_fridge_correctly_stocked" data-location="all" required>
+            <label for="desserts_fridge_correctly_stocked" data-lang-en="Desserts fridge correctly stocked" data-lang-de="Desserts Kühlschrank korrekt aufgefüllt">Desserts Kühlschrank korrekt aufgefüllt</label>
+        </div>
+        <div class="task-item" id="work_list_completed_task">
+            <input type="checkbox" id="work_list_completed" name="work_list_completed" data-location="all" required>
+            <label for="work_list_completed" data-lang-en="Work list completed" data-lang-de="Liste abarbeiten">Liste abarbeiten</label>
+        </div>
+        <div class="task-item">
+            <input type="checkbox" id="all_lights_off" name="all_lights_off" data-location="all" required>
+            <label for="all_lights_off" data-lang-en="All lights off" data-lang-de="Alle Lichter aus">Alle Lichter aus</label>
+        </div>
+        <div class="task-item">
+            <input type="checkbox" id="heat_bridge_off" name="heat_bridge_off" data-location="all" required>
+            <label for="heat_bridge_off" data-lang-en="Heat bridge off" data-lang-de="Wärmebrücke aus">Wärmebrücke aus</label>
+        </div>
+        <div class="task-item">
+            <input type="checkbox" id="drinks_correctly_stocked_incl_team_water" name="drinks_correctly_stocked_incl_team_water" data-location="JP23" required>
+            <label for="drinks_correctly_stocked_incl_team_water" data-lang-en="Drinks correctly stocked incl. team water" data-lang-de="Getränke korrekt aufgefüllt inkl. Teamwasser">Getränke korrekt aufgefüllt inkl. Teamwasser</label>
+        </div>
+        <div class="task-item">
+            <input type="checkbox" id="webshop_online_if_offline" name="webshop_online_if_offline" data-location="JP23" required>
+            <label for="webshop_online_if_offline" data-lang-en="Webshop and Lieferando back online if they were offline" data-lang-de="Webshop und Lieferando wieder online stellen, falls sie offline geschaltet wurden">Webshop und Lieferando wieder online stellen, falls sie offline geschaltet wurden</label>
+        </div>
+        <div class="task-item" id="staircase_jp23">
+            <input type="checkbox" id="staircase_bottom_top" name="staircase_bottom_top" data-location="JP23">
+            <label for="staircase_bottom_top" data-lang-en="Staircase downstairs and upstairs mopped in front of the apartment" data-lang-de="Treppenhaus unten und oben vor Appartment gewischt">Treppenhaus unten und oben vor Appartment gewischt</label>
+        </div>
+
+
+
+        <!-- Remove tasks for TS17 -->
+<!--<div class="task-item" id="dismantling_list_task">-->
+<!--    <input type="checkbox" id="dismantling_list_correctly_executed" name="dismantling_list_correctly_executed" data-location="not-TS17" required>-->
+<!--    <label for="dismantling_list_correctly_executed" data-lang-en="Dismantling list correctly executed and checked" data-lang-de="Aufbauliste korrekt ausgeführt und überprüft">Aufbauliste korrekt ausgeführt und überprüft</label>-->
+<!--</div>-->
+<div class="task-item" id="end_shift_list_task">
+    <input type="checkbox" id="end_shift_list_correctly_executed" name="end_shift_list_correctly_executed" data-location="not-TS17" required>
+    <label for="end_shift_list_correctly_executed" data-lang-en="End of shift list correctly executed and checked" data-lang-de="Liste für Schichtende korrekt ausgeführt und überprüft">Liste für Schichtende korrekt ausgeführt und überprüft</label>
+</div>
+
+<!-- New task for JP23 -->
+<div class="task-item" id="jp23_storage_check">
+    <input type="checkbox" id="jp23_storage_checked" name="jp23_storage_checked" data-location="JP23">
+    <label for="jp23_storage_checked" data-lang-en="Storage area personally checked (Apartment and Basement)" data-lang-de="Ordnung der Lagerflächen wurde persönlich überprüft (Wohnung und Keller)">Ordnung der Lagerflächen wurde persönlich überprüft (Wohnung und Keller)</label>
+</div>
+
+<!-- New task for KP5 -->
+<div class="task-item" id="kp5_storage_check">
+    <input type="checkbox" id="kp5_storage_checked" name="kp5_storage_checked" data-location="KP5">
+    <label for="kp5_storage_checked" data-lang-en="Storage area personally checked (Garage 1, Garage 2)" data-lang-de="Ordnung der Lagerflächen wurde persönlich überprüft (Garage 1, Garage 2)">Ordnung der Lagerflächen wurde persönlich überprüft (Garage 1, Garage 2)</label>
+</div>
+
+<!-- New task for TS17 -->
+<div class="task-item" id="ts17_storage_check">
+    <input type="checkbox" id="ts17_storage_checked" name="ts17_storage_checked" data-location="TS17">
+    <label for="ts17_storage_checked" data-lang-en="Storage area personally checked (Dishwashing kitchen, behind the back entrance)" data-lang-de="Ordnung der Lagerflächen wurde persönlich überprüft (Spülküche, vor dem Hintereingang)">Ordnung der Lagerflächen wurde persönlich überprüft (Spülküche, vor dem Hintereingang)</label>
+</div>
+
+<!-- Boden Gastraum nass gereinigt YES/NO -->
+
+
+
+
+        <!-- Comment Box -->
+        <label for="comments" data-lang-en="Comments" data-lang-de="Kommentare">Kommentare</label>
+        <textarea id="comments" name="comments" rows="4"></textarea>
+
+        <input type="submit" value="Senden" data-lang-en="Submit" data-lang-de="Senden">
+
+    </form>
+
+    <div class="language-switcher">
+        <a href="#" onclick="switchLanguage('en')">English</a> | <a href="#" onclick="switchLanguage('de')">Deutsch</a>
+    </div>
+    <a href="{% url 'department_shift_selection' %}" class="home-button" data-lang-en="Home" data-lang-de="Startseite">Startseite</a>
+
+    <div class="logo-container">
+        <img src="{% static 'images/FORZACHECK1_whie.png' %}" alt="Forzacheck Logo" class="logo">
+    </div>
+    <script>
+     function checkLocation() {
+    var location = document.getElementById("location").value;
+    var staircaseTask = document.getElementById("staircase_jp23");
+<!--    var workListTask = document.getElementById("work_list_completed_task");-->
+    var jp23StorageCheck = document.getElementById("jp23_storage_check");
+    var kp5StorageCheck = document.getElementById("kp5_storage_check");
+    var ts17StorageCheck = document.getElementById("ts17_storage_check");
+    // var dismantlingListTask = document.getElementById("dismantling_list_task");
+    var endShiftListTask = document.getElementById("end_shift_list_task");
+    var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    var workListTask = document.getElementById("work_list_completed_task");
+    var workListCompletedCheckbox = document.getElementById("work_list_completed"); // Select the checkbox
+    var moveTablesThursday = document.getElementById("move_tables_thursday");
+
+    staircaseTask.style.display = "none";
+        jp23StorageCheck.style.display = "none";
+        kp5StorageCheck.style.display = "none";
+        ts17StorageCheck.style.display = "none";
+        // dismantlingListTask.style.display = "none";
+        endShiftListTask.style.display = "none";
+        workListTask.style.display = "none";
+        workListCompletedCheckbox.disabled = true;
+        moveTablesThursday.style.display = "none";
+
+    // Reset all checkboxes' required property
+    checkboxes.forEach(function(checkbox) {
+        checkbox.required = false;
+    });
+
+    // Adjust task visibility and checkbox requirements based on location
+    if (location === "JP23") {
+        workListTask.style.display = "flex";
+        workListCompletedCheckbox.disabled = false;
+        staircaseTask.style.display = "flex";
+        // dismantlingListTask.style.display = "flex";
+        endShiftListTask.style.display = "flex";
+<!--        workListTask.style.display = "none";-->
+        kp5StorageCheck.style.display = "none";
+        ts17StorageCheck.style.display = "none";
+        jp23StorageCheck.style.display = "flex"; // Show JP23-specific task
+        moveTablesThursday.style.display = "none";
+
+        checkboxes.forEach(function(checkbox) {
+            if (checkbox.getAttribute('data-location') === "JP23" || checkbox.getAttribute('data-location') === "all") {
+                checkbox.required = true;
+            }
+        });
+    }  else if (location === "KP5") {
+        workListTask.style.display = "flex";
+        workListCompletedCheckbox.disabled = false;
+        staircaseTask.style.display = "none";
+        jp23StorageCheck.style.display = "none";
+        // dismantlingListTask.style.display = "flex";
+        endShiftListTask.style.display = "flex";
+<!--        workListTask.style.display = "flex";-->
+        ts17StorageCheck.style.display = "none";
+        kp5StorageCheck.style.display = "flex"; // Show KP5-specific task
+        moveTablesThursday.style.display = "flex";
+
+        checkboxes.forEach(function(checkbox) {
+            if (checkbox.getAttribute('data-location') === "KP5" || checkbox.getAttribute('data-location') === "all" || checkbox.getAttribute('data-location') === "not-TS17") {
+                checkbox.required = true; // Mark KP5-related checkboxes as required
+            }
+        });
+    } else if (location === "TS17") {
+        workListTask.style.display = "none";
+        workListCompletedCheckbox.disabled = true;
+        staircaseTask.style.display = "none";
+        // dismantlingListTask.style.display = "none";
+        endShiftListTask.style.display = "none";
+<!--        workListTask.style.display = "flex";-->
+        jp23StorageCheck.style.display = "none";
+        kp5StorageCheck.style.display = "none";
+        ts17StorageCheck.style.display = "flex"; // Show TS17-specific task
+        moveTablesThursday.style.display = "none";
+
+        checkboxes.forEach(function(checkbox) {
+            if (checkbox.getAttribute('data-location') === "TS17" || checkbox.getAttribute('data-location') === "all") {
+                checkbox.required = true; // Mark TS17-related checkboxes as required
+            }
+        });
+    }
+}
+// Function to validate form submission
+function validateForm() {
+    var location = document.getElementById("location").value;
+    var requiredCheckboxes = document.querySelectorAll('input[type="checkbox"]:required');
+    var formValid = true;
+
+    // Filter required checkboxes based on location
+    var locationSpecificCheckboxes = Array.from(requiredCheckboxes).filter(checkbox => {
+        return checkbox.getAttribute('data-location') === location || checkbox.getAttribute('data-location') === 'all';
+    });
+
+    // Check if any required checkboxes are unchecked
+    locationSpecificCheckboxes.forEach(function(checkbox) {
+        if (!checkbox.checked) {
+            formValid = false;
+        }
+    });
+
+    // If form is invalid, alert the user
+    if (!formValid) {
+        alert("Please complete all required tasks for " + location + " before submitting.");
+        return false; // Prevent form submission
+    }
+
+    return true; // Allow form submission
+}
+
+// Attach event listener to form submission
+document.getElementById("taskForm").onsubmit = function() {
+    return validateForm(); // Call validateForm before submission
+};
+
+// Call checkLocation initially to set the default state
+window.onload = function() {
+        checkLocation(); // Set the tasks based on the default location
+
+};
+
+       function switchLanguage(language) {
+    const elements = document.querySelectorAll('[data-lang-en]');
+    elements.forEach((element) => {
+        element.textContent = element.getAttribute(`data-lang-${language}`);
+    });
+
+    const options = document.querySelectorAll('option[data-lang-en]');
+    options.forEach((option) => {
+        option.textContent = option.getAttribute(`data-lang-${language}`);
+    });
+
+    document.getElementById('name').placeholder = language === 'en' ? 'Enter your name' : 'Dein Vorname';
+    document.querySelector('input[type="submit"]').value = language === 'en' ? 'Submit' : 'Senden';
+}
+
+// Set initial language to German
+switchLanguage('de');
+
+// Example of switching to English
+switchLanguage('en');
+    </script>
+</body>
+</html>

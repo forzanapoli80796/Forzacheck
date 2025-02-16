@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cleaning Form / Reinigungsformular</title>
+     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #87ceeb;
+            padding: 20px;
+            margin: 0;
+            height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 20px;
+            background-color: #87ceeb;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        input[type="file"],
+        select {
+            width: calc(50% - 12px);
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .language-switcher {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .language-switcher a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #007bff;
+            font-size: 16px;
+        }
+        .language-switcher a:hover {
+            text-decoration: underline;
+        }
+        .home-button {
+            display: block;
+            width: 100px;
+            margin: 20px auto;
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .home-button:hover {
+            background-color: #218838;
+        }
+        .logo-container {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+        .logo {
+            max-width: 150px;
+            height: auto;
+        }
+        .full-width {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .task-item input[type="checkbox"] {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <form id="cleaningForm" action="{% url 'doughroom_cleaning_submit' %}" method="post" onsubmit="return validateForm();">
+        {% csrf_token %}
+        <h1 data-lang-en="Cleaning Form" data-lang-de="Reinigungsformular">Reinigungsformular</h1>
+        <div class="form-field">
+            <label for="date" data-lang-en="Date" data-lang-de="Datum">Datum</label>
+            <input type="date" id="date" name="date" required>
+        </div><br>
+
+        <div class="form-field">
+            <label for="name" data-lang-en="Name" data-lang-de="Name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Dein Vorname" required>
+        </div><br>
+
+        <!-- Task Checkboxes -->
+        <div class="task-item">
+            <input type="checkbox" id="table_no_flour" name="table_no_flour">
+            <label for="table_no_flour" data-lang-en="Both work tables completely free of flour" data-lang-de="Beide Arbeitstische vollständig von Mehl befreit">Beide Arbeitstische vollständig von Mehl befreit</label>
+        </div>
+
+        <div class="task-item">
+            <input type="checkbox" id="table_surface_cleaned" name="table_surface_cleaned">
+            <label for="table_surface_cleaned" data-lang-en="Work table surfaces thoroughly cleaned" data-lang-de="Oberflächen der Arbeitstische gründlich feucht gereinigt">Oberflächen der Arbeitstische gründlich feucht gereinigt</label>
+        </div>
+
+        <div class="task-item">
+            <input type="checkbox" id="table_lower_shelf_cleaned" name="table_lower_shelf_cleaned">
+            <label for="table_lower_shelf_cleaned" data-lang-en="Lower shelves of the work tables cleaned" data-lang-de="Untere Ablageflächen der Arbeitstische feucht gereinigt">Untere Ablageflächen der Arbeitstische feucht gereinigt</label>
+        </div>
+
+        <div class="task-item">
+            <input type="checkbox" id="shelf_cleaned" name="shelf_cleaned">
+            <label for="shelf_cleaned" data-lang-en="Wall shelf completely cleaned" data-lang-de="Wandregal vollständig abgeräumt und feucht gereinigt">Wandregal vollständig abgeräumt und feucht gereinigt</label>
+        </div>
+
+        <div class="task-item">
+            <input type="checkbox" id="dough_machine_inside_cleaned" name="dough_machine_inside_cleaned">
+            <label for="dough_machine_inside_cleaned" data-lang-en="Dough machine inside cleaned" data-lang-de="Innenflächen der Teigmaschine feucht gereinigt">Innenflächen der Teigmaschine feucht gereinigt</label>
+        </div>
+
+        <div class="task-item">
+            <input type="checkbox" id="dough_machine_outside_cleaned" name="dough_machine_outside_cleaned">
+            <label for="dough_machine_outside_cleaned" data-lang-en="Dough machine outside cleaned" data-lang-de="Außenflächen der Teigmaschine feucht gereinigt">Außenflächen der Teigmaschine feucht gereinigt</label>
+        </div>
+
+        <div class="task-item">
+            <input type="checkbox" id="scale_cleaned_connected" name="scale_cleaned_connected">
+            <label for="scale_cleaned_connected" data-lang-en="Scale cleaned and connected to the charger" data-lang-de="Waage feucht gereinigt und ans Ladekabel angeschlossen">Waage feucht gereinigt und ans Ladekabel angeschlossen</label>
+        </div>
+
+        <div class="task-item">
+            <input type="checkbox" id="sink_surface_cleaned" name="sink_surface_cleaned">
+            <label for="sink_surface_cleaned" data-lang-en="Sink surface cleaned" data-lang-de="Oberfläche der Spüle feucht gereinigt">Oberfläche der Spüle feucht gereinigt</label>
+        </div>
+
+        <div class="task-item">
+            <input type="checkbox" id="floor_swept" name="floor_swept">
+            <label for="floor_swept" data-lang-en="Floor carefully swept" data-lang-de="Boden sorgfältig gekehrt">Boden sorgfältig gekehrt</label>
+        </div>
+        <div class="task-item">
+    <input type="checkbox" id="boden_frei_machen" name="boden_frei_machen">
+    <label for="boden_frei_machen" data-lang-en="Clear the floor (dough boxes & Caputo sacks on the table), always on Thursday or the day before on holidays" data-lang-de="Boden frei machen (Teigkisten & Caputo Säcke auf den Tisch), immer donnerstags bei Feiertag einen Tag davor">
+        Boden frei machen (Teigkisten & Caputo Säcke auf den Tisch), immer donnerstags bei Feiertag einen Tag davor
+    </label>
+</div>
+
+
+        <div class="form-field">
+            <label for="comments" data-lang-en="Comments" data-lang-de="Kommentare">Kommentare</label>
+            <textarea id="comments" name="comments" rows="4"></textarea>
+        </div><br>
+
+        <input type="submit" value="Senden" data-lang-en="Submit" data-lang-de="Senden">
+    </form>
+
+    <a href="{% url 'department_shift_selection' %}" class="home-button" data-lang-en="Home" data-lang-de="Startseite">Startseite</a>
+
+    <div class="language-switcher">
+        <a href="#" onclick="switchLanguage('en')">English</a> | <a href="#" onclick="switchLanguage('de')">Deutsch</a>
+    </div>
+
+    <div class="logo-container">
+        <img src="{% static 'images/FORZACHECK1_whie.png' %}" alt="Forzacheck Logo" class="logo">
+    </div>
+
+    <script>
+        // Language Switcher
+        function switchLanguage(lang) {
+            const elements = document.querySelectorAll('[data-lang-en], [data-lang-de]');
+            elements.forEach(element => {
+                const text = element.getAttribute(`data-lang-${lang}`);
+                if (text) {
+                    element.textContent = text;
+                }
+            });
+        }
+
+        // Form validation
+        function validateForm() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            for (let checkbox of checkboxes) {
+                if (!checkbox.checked) {
+                    alert('Please complete all tasks by checking each box before submitting.');
+                    return false;
+                }
+            }
+            return true;
+        }
+    </script>
+</body>
+</html>

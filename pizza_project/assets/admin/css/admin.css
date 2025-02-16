@@ -1,0 +1,13 @@
+.model-terminalinventory .results {
+    overflow-x: auto;  /* Enable horizontal scrolling */
+    white-space: nowrap;
+}
+.model-kitchenlate .results {
+    overflow-x: auto; /* Enable horizontal scrolling */
+    white-space: nowrap; /* Prevent content wrapping */
+}
+.model-kitchenlatetask .results {
+    overflow-x: auto; /* Enable horizontal scrolling */
+    white-space: nowrap; /* Prevent content wrapping */
+}
+

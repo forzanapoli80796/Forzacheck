@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Küchen Spät Aufgabenformular</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #87ceeb;
+            padding: 20px;
+            margin: 0;
+            height: 100vh; /* Ensure body covers full viewport height */
+        }
+        h1 {
+            text-align: center;
+            color: #fff; /* White letters */
+            margin-bottom: 20px;
+            background-color: #87ceeb; /* Blue background */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+        }
+        input[type="date"],
+        input[type="text"],
+        select,
+        input[type="checkbox"] {
+            width: calc(50% - 22px); /* Adjust for border width */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input[type="checkbox"] {
+            margin-right: 10px;
+            width: auto;
+        }
+        input[type="submit"] {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+            box-sizing: border-box;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .task-list {
+            margin-top: 20px;
+        }
+        .task-list h2 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .task-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        .task-item label {
+            margin: 0;
+            color: #666;
+        }
+        .language-switcher {
+            text-align: center;
+            margin-top: 20px;
+            width: 100%;
+        }
+        .language-switcher a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #007bff;
+            font-size: 16px;
+        }
+        .language-switcher a:hover {
+            text-decoration: underline;
+        }
+        .home-button {
+            display: block;
+            width: 100px;
+            margin: 20px auto;
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .home-button:hover {
+            background-color: #218838;
+        }
+        textarea {
+            width: calc(100% - 22px); /* Adjust for border width */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            box-sizing: border-box; /* Ensures padding doesn't affect width */
+        }
+        .radio-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .radio-group input[type="radio"] {
+            margin-right: 5px;
+        }
+        .radio-group label {
+            margin-right: 15px;
+            margin-bottom: 0;
+        }
+        .logo-container {
+            text-align: center;
+            margin-bottom: 5px; /* Reduced margin */
+        }
+        .logo {
+            max-width: 150px; /* Smaller size */
+            height: auto;
+        }
+
+
+
+    </style>
+</head>
+<body>
+
+
+    <form id="kitchen_late_task" action="{% url 'kitchen_late_task_submit' %}" method="post">
+        {% csrf_token %}
+        <h1 data-lang-en="Kitchen Late Shift Task Form" data-lang-de="Formular für Spätschichtaufgaben in der Küche">Formular für Spätschichtaufgaben in der Küche</h1>
+        <label for="date" data-lang-en="Date" data-lang-de="Datum">Datum</label>
+        <input type="date" id="date" name="date" required><br>
+        <label for="location" data-lang-en="Select Location" data-lang-de="Standort wählen">Standort wählen</label>
+        <select name="location" id="location" onchange="handleLocationChange()" required>
+            <option value="select" data-lang-en="select" data-lang-de="wählen">wählen</option>
+            <option value="JP23" data-lang-en="JP23" data-lang-de="JP23">JP23</option>
+            <option value="KP5" data-lang-en="KP5" data-lang-de="KP5">KP5</option>
+            <option value="TS17" data-lang-en="TS17" data-lang-de="TS17">TS17</option>
+        </select><br>
+        <label for="name" data-lang-en="Name" data-lang-de="Name">Name</label>
+        <input type="text" id="name" name="name" placeholder="Dein Vorname" required><br>
+
+        <!-- General tasks for KP5 and TS17 -->
+        <div class="task-list" id="generalTasks" style="display:none;">
+            <h2 data-lang-en="Tasks" data-lang-de="Aufgaben">Aufgaben</h2>
+            <!--<div class="task-item">-->
+            <!--    <input type="checkbox" id="check_dismantling" name="check_dismantling">-->
+            <!--    <label for="check_dismantling" data-lang-en="Check dismantling" data-lang-de="Demontage prüfen">Demontage prüfen</label>-->
+            <!--</div>-->
+            <div class="task-item">
+                <input type="checkbox" id="clean_dishwasher" name="clean_dishwasher">
+                <label for="clean_dishwasher" data-lang-en="Clean dishwasher" data-lang-de="Geschirrspüler reinigen">Geschirrspüler reinigen</label>
+            </div>
+            <div class="task-item">
+                <input type="checkbox" id="turned_off_devices" name="turned_off_devices">
+                <label for="turned_off_devices" data-lang-en="Turn off devices (oven, ventilation, dishwasher)" data-lang-de="Geräte ausschalten (Ofen, Lüftung, Geschirrspüler)">Geräte ausschalten (Ofen, Lüftung, Geschirrspüler)</label>
+            </div>
+            <div class="task-item">
+                <input type="checkbox" id="dismantle_stations" name="dismantle_stations">
+                <label for="dismantle_stations" data-lang-en="Dismantle stations (garnish/covering)" data-lang-de="Stationen demontieren (Garnierung/Abdeckung)">Stationen demontieren (Garnierung/Abdeckung)</label>
+            </div>
+            <div class="task-item">
+                <input type="checkbox" id="sweep_floor" name="sweep_floor">
+                <label for="sweep_floor" data-lang-en="Sweep floor" data-lang-de="Boden fegen">Boden fegen</label>
+            </div>
+            <div class="task-item">
+                <input type="checkbox" id="cleaning" name="cleaning">
+                <label for="cleaning" data-lang-en="Soap, cleaning cloth roll, folded towels filled up" data-lang-de="Seife, Reinigungstuchrolle, gefaltete Handtücher aufgefüllt">Seife, Reinigungstuchrolle, gefaltete Handtücher aufgefüllt</label>
+            </div>
+            <div class="task-item">
+                <input type="checkbox" id="dirty" name="dirty">
+                <label for="dirty" data-lang-en="Dirty aprons and towels in the laundry basket" data-lang-de="Schmutzige Schürzen und Handtücher im Wäschekorb">Schmutzige Schürzen und Handtücher im Wäschekorb</label>
+            </div>
+        </div>
+
+        <!-- JP23 specific tasks -->
+        <div id="jp23Tasks" style="display:none;">
+            <label for="side" data-lang-en="Select Side" data-lang-de="Seite wählen">Seite wählen</label><br>
+            <select name="side" id="side" onchange="handleSideSelection()" required>
+                <option value="select" data-lang-en="select" data-lang-de="wählen">wählen</option>
+                <option value="left" data-lang-en="Left" data-lang-de="Links">Links</option>
+                <option value="right" data-lang-en="Right" data-lang-de="Rechts">Rechts</option>
+            </select><br>
+            <!-- Left Side Tasks -->
+            <div class="task-list" id="leftSideTasks" style="display:none;">
+                <h2 data-lang-en="Left Side Tasks" data-lang-de="Aufgaben für die linke Seite">Aufgaben für die linke Seite</h2>
+                <div class="task-item">
+                    <input type="checkbox" id="jp23_task1" name="jp23_task1">
+                    <label for="jp23_task1" data-lang-en="All ovens incl. exhaust air off" data-lang-de="Alle Öfen inkl. Abluft aus">Alle Öfen inkl. Abluft aus</label>
+                </div>
+                <div class="task-item">
+                    <input type="checkbox" id="jp23_task2" name="jp23_task2">
+                    <label for="jp23_task2" data-lang-en="Rinse and put away all GNs and tools (cutlery, pizza wheel, knives, portioners, pizza peel etc.)" data-lang-de="Alle GNs und Werkzeuge (Besteck, Pizzarad, Messer, Portionierer, Pizzaschaufel etc.) spülen und wegräumen">Alle GNs und Werkzeuge (Besteck, Pizzarad, Messer, Portionierer, Pizzaschaufel etc.) spülen und wegräumen</label>
+                </div>
+                <div class="task-item">
+                    <input type="checkbox" id="jp23_task3" name="jp23_task3">
+                    <label for="jp23_task3" data-lang-en="Wet wipe the garnishing station and refill bottles completely, including spices" data-lang-de="Die Garnierstation feucht abwischen und Flaschen komplett auffüllen, einschließlich Gewürze">Die Garnierstation feucht abwischen und Flaschen komplett auffüllen, einschließlich Gewürze</label>
+                </div>
+                <div class="task-item">
+                    <input type="checkbox" id="jp23_task4" name="jp23_task4">
+                    <label for="jp23_task4" data-lang-en="Clean the sink (dispose of food residue, brush all surfaces with grease remover, including inside the bottom door)" data-lang-de="Spüle reinigen (Speisereste entsorgen, alle Oberflächen mit Fettentferner bürsten, einschließlich der Innenseite der unteren Tür)">Spüle reinigen (Speisereste entsorgen, alle Oberflächen mit Fettentferner bürsten, einschließlich der Innenseite der unteren Tür)</label>
+                </div>
+                <div class="task-item">
+                    <input type="checkbox" id="jp23_task5" name="jp23_task5">
+                    <label for="jp23_task5" data-lang-en="Wet wipe all wall surfaces on the left (tiles, ovens, walls)" data-lang-de="Alle Wandflächen auf der linken Seite feucht abwischen (Fliesen, Öfen, Wände)">Alle Wandflächen auf der linken Seite feucht abwischen (Fliesen, Öfen, Wände)</label>
+                </div>
+                <div class="task-item">
+                    <input type="checkbox" id="jp23_task6" name="jp23_task6">
+                    <label for="jp23_task6" data-lang-en="Wet wipe all oven surfaces, wipe out wet under the bottom oven (as well as possible)" data-lang-de="Alle Ofenoberflächen feucht abwischen, feucht unter dem unteren Ofen abwischen (so gut wie möglich)">Alle Ofenoberflächen feucht abwischen, feucht unter dem unteren Ofen abwischen (so gut wie möglich)</label>
+                </div>
+                <div class="task-item">
+                    <input type="checkbox" id="jp23_task7" name="jp23_task7">
+                    <label for="jp23_task7" data-lang-en="Dishwasher (dispose of leftover food, clean sieves, pump out dirty water)" data-lang-de="Geschirrspüler (Essensreste entsorgen, Siebe reinigen, schmutziges Wasser abpumpen)">Geschirrspüler (Essensreste entsorgen, Siebe reinigen, schmutziges Wasser abpumpen)</label>
+                </div>
+                <div class="task-item">
+                    <input type="checkbox" id="jp23_task8" name="jp23_task8">
+                    <label for="jp23_task8" data-lang-en="Empty the garbage can AND wet wipe the outside!" data-lang-de="Mülleimer leeren UND die Außenseite feucht abwischen!">Mülleimer leeren UND die Außenseite feucht abwischen!</label>
+                </div>
+
+                <br>
+                <br>
+                <div class="task-item">
+    <label for="soap_WC_sufficient" data-lang-en="Soap WC sufficient&nbsp;&nbsp;&nbsp;" data-lang-de="Seife WC ausreichend&nbsp;&nbsp;&nbsp;">Seife WC ausreichend&nbsp;&nbsp;&nbsp;</label>
+    <select id="soap_WC_sufficient" name="soap_WC_sufficient">
+        <option value="" data-lang-en="Select" data-lang-de="Wählen">Wählen</option>
+        <option value="yes" data-lang-en="Yes" data-lang-de="Ja">Ja</option>
+        <option value="no" data-lang-en="No" data-lang-de="Nein">Nein</option>
+    </select>
+</div>
+<div class="task-item">
+    <label for="toilet_paper_WC_sufficient" data-lang-en="Toilet paper WC sufficient&nbsp;&nbsp;&nbsp;" data-lang-de="Toilettenpapier WC ausreichend&nbsp;&nbsp;&nbsp;">Toilettenpapier WC ausreichend&nbsp;&nbsp;&nbsp;</label>
+    <select id="toilet_paper_WC_sufficient" name="toilet_paper_WC_sufficient">
+        <option value="" data-lang-en="Select" data-lang-de="Wählen">Wählen</option>
+        <option value="yes" data-lang-en="Yes" data-lang-de="Ja">Ja</option>
+        <option value="no" data-lang-en="No" data-lang-de="Nein">Nein</option>
+    </select>
+</div>
+<div class="task-item">
+    <label for="grease_remover_kitchen_sufficient" data-lang-en="Grease remover kitchen sufficient&nbsp;&nbsp;&nbsp;" data-lang-de="Fettentferner Küche ausreichend&nbsp;&nbsp;&nbsp;">Fettentferner Küche ausreichend&nbsp;&nbsp;&nbsp;</label>
+    <select id="grease_remover_kitchen_sufficient" name="grease_remover_kitchen_sufficient">
+        <option value="" data-lang-en="Select" data-lang-de="Wählen">Wählen</option>
+        <option value="yes" data-lang-en="Yes" data-lang-de="Ja">Ja</option>
+        <option value="no" data-lang-en="No" data-lang-de="Nein">Nein</option>
+    </select>
+</div>
+<div class="task-item">
+    <label for="washingup_liquid_kitchen_sufficient" data-lang-en="Washing-up liquid kitchen sufficient&nbsp;&nbsp;&nbsp;" data-lang-de="Spülmittel Küche ausreichend&nbsp;&nbsp;&nbsp;">Spülmittel Küche ausreichend&nbsp;&nbsp;&nbsp;</label>
+    <select id="washingup_liquid_kitchen_sufficient" name="washingup_liquid_kitchen_sufficient">
+        <option value="" data-lang-en="Select" data-lang-de="Wählen">Wählen</option>
+        <option value="yes" data-lang-en="Yes" data-lang-de="Ja">Ja</option>
+        <option value="no" data-lang-en="No" data-lang-de="Nein">Nein</option>
+    </select>
+</div>
+<div class="task-item">
+    <label for="blue_roll_kitchen_sufficient" data-lang-en="Blue roll kitchen sufficient&nbsp;&nbsp;&nbsp;" data-lang-de="Blaue Rolle Küche ausreichend&nbsp;&nbsp;&nbsp;">Blaue Rolle Küche ausreichend&nbsp;&nbsp;&nbsp;</label>
+    <select id="blue_roll_kitchen_sufficient" name="blue_roll_kitchen_sufficient">
+        <option value="" data-lang-en="Select" data-lang-de="Wählen">Wählen</option>
+        <option value="yes" data-lang-en="Yes" data-lang-de="Ja">Ja</option>
+        <option value="no" data-lang-en="No" data-lang-de="Nein">Nein</option>
+    </select>
+</div>
+            </div>
+
+            <!-- Right Side Tasks -->
+            <div class="task-list" id="rightSideTasks" style="display:none;">
+                <h2 data-lang-en="Right Side Tasks" data-lang-de="Aufgaben für die rechte Seite">Aufgaben für die rechte Seite</h2>
+                <div class="task-item">
+                    <input type="checkbox" id="jp23_task10" name="jp23_task10">
+                    <label for="jp23_task10" data-lang-en="Work surface on the right roughly cleaned with dough scraper" data-lang-de="Arbeitsfläche rechts grob mit Teigschaber gereinigt">Arbeitsfläche rechts grob mit Teigschaber gereinigt</label>
+                </div>
+                <div class="task-item">
+                    <input type="checkbox" id="jp23_task11" name="jp23_task11">
+                    <label for="jp23_task11" data-lang-en="All GN's from KAV changed and completely refilled with new goods (new goods at the bottom, old goods on top)" data-lang-de="Alle GN's von KAV gewechselt und vollständig mit neuen Waren befüllt (neue Waren unten, alte Waren oben)">Alle GN's von KAV gewechselt und vollständig mit neuen Waren befüllt (neue Waren unten, alte Waren oben)</label>
+                </div>
+                <div class="task-item">
+                    <input type="checkbox" id="jp23_task12" name="jp23_task12">
+                    <label for="jp23_task12" data-lang-en="Wet wipe all work surfaces incl. rear window sill and KAV (inside, outside and below!)" data-lang-de="Alle Arbeitsflächen feucht abwischen inkl. Fensterbank hinten und KAV (innen, außen und unten!)">Alle Arbeitsflächen feucht abwischen inkl. Fensterbank hinten und KAV (innen, außen und unten!)</label>
+                </div>
+                <div class="task-item">
+                    <input type="checkbox" id="jp23_task13" name="jp23_task13">
+                    <label for="jp23_task13" data-lang-en="Wet wipe all walls on the right incl. tiles, fridges and waste list" data-lang-de="Alle Wände auf der rechten Seite feucht abwischen inkl. Fliesen, Kühlschränke und Abfallliste">Alle Wände auf der rechten Seite feucht abwischen inkl. Fliesen, Kühlschränke und Abfallliste</label>
+                </div>
+                <div class="task-item">
+                    <input type="checkbox" id="jp23_task14" name="jp23_task14">
+                    <label for="jp23_task14" data-lang-en="Wet wipe the seal of the vegetable refrigerator" data-lang-de="Die Dichtung des Gemüse-Kühlschranks feucht abwischen">Die Dichtung des Gemüse-Kühlschranks feucht abwischen</label>
+                </div>
+                <div class="task-item">
+                    <input type="checkbox" id="jp23_task15" name="jp23_task15">
+                    <label for="jp23_task15" data-lang-en="Switch KAV on again" data-lang-de="KAV wieder einschalten">KAV wieder einschalten</label>
+                </div>
+                <div class="task-item">
+                    <input type="checkbox" id="jp23_task16" name="jp23_task16">
+                    <label for="jp23_task16" data-lang-en="Sweep the floor for the 2nd time (all corners, under the tables and stairs!)" data-lang-de="Boden zum 2. Mal fegen (alle Ecken, unter den Tischen und Treppen!)">Boden zum 2. Mal fegen (alle Ecken, unter den Tischen und Treppen!)</label>
+                </div>
+                <div class="task-item">
+                    <input type="checkbox" id="jp23_task17" name="jp23_task17">
+                    <label for="jp23_task17" data-lang-en="Windows at the back closed" data-lang-de="Fenster hinten geschlossen">Fenster hinten geschlossen</label>
+                </div>
+            </div>
+        </div>
+
+
+         <div class="task-item">
+    <label for="washing_machine_status" data-lang-en="Washing machine started" data-lang-de="Waschmaschine angestellt">Waschmaschine angestellt</label>
+    <select id="washing_machine_status" name="washing_machine_status">
+        <option value="" data-lang-en="Select" data-lang-de="Wählen">Wählen</option>
+        <option value="yes" data-lang-en="Yes" data-lang-de="Ja">Ja</option>
+        <option value="no" data-lang-en="No" data-lang-de="Nein">Nein</option>
+    </select>
+</div>
+
+<div class="task-item">
+    <label for="washing_machine_person" data-lang-en="Name of the person who started the washing machine today" data-lang-de="Name der Person, die die Waschmaschine heute angestellt hat">Name der Person, die die Waschmaschine heute angestellt hat</label>
+    <input type="text" id="washing_machine_person" name="washing_machine_person" placeholder="Name" data-lang-en="Name" data-lang-de="Name">
+</div>
+
+
+
+
+        <input type="hidden" id="jp23_side_value" name="jp23_side_value">
+
+        <label for="comments" data-lang-en="Comments" data-lang-de="Kommentare">Kommentare</label>
+        <textarea id="comments" name="comments" rows="4"></textarea>
+        <input type="submit" value="Senden" data-lang-en="Submit" data-lang-de="Senden">
+    </form>
+<a href="{% url 'department_shift_selection' %}" class="home-button" data-lang-en="Home" data-lang-de="Startseite">Startseite</a>
+    <div class="language-switcher">
+        <a href="#" onclick="switchLanguage('en')">English</a> | <a href="#" onclick="switchLanguage('de')">Deutsch</a>
+    </div>
+    <div class="logo-container">
+        <img src="{% static 'images/FORZACHECK1_whie.png' %}" alt="Forzacheck Logo" class="logo">
+    </div>
+<script>
+    // JavaScript function to switch language
+    function switchLanguage(language) {
+        var elements = document.querySelectorAll('[data-lang-en]');
+        elements.forEach(function(element) {
+            element.innerText = element.getAttribute('data-lang-' + language);
+        });
+
+        var options = document.querySelectorAll('option[data-lang-en]');
+        options.forEach(function(option) {
+            option.innerText = option.getAttribute('data-lang-' + language);
+        });
+
+        document.getElementById('name').placeholder = language === 'en' ? 'Enter your name' : 'Dein Vorname';
+        document.querySelector('input[type="submit"]').value = language === 'en' ? 'Submit' : 'Senden';
+    }
+
+    function handleLocationChange() {
+        var location = document.getElementById("location").value;
+        var jp23Tasks = document.getElementById("jp23Tasks");
+        var generalTasks = document.getElementById("generalTasks");
+
+        // Hide all task sections initially
+        jp23Tasks.style.display = "none";
+        generalTasks.style.display = "none";
+
+        // Display specific tasks based on location
+        if (location === "JP23") {
+            jp23Tasks.style.display = "block";
+        } else if (location === "KP5" || location === "TS17") {
+            generalTasks.style.display = "block";
+            // Show washing machine tasks for KP5 and TS17
+            document.getElementById('washing_machine_status').parentElement.style.display = "block";
+            document.getElementById('washing_machine_person').parentElement.style.display = "block";
+        }
+
+        // Reset left/right side selection visibility based on location
+        var leftSideTasks = document.getElementById("leftSideTasks");
+        var rightSideTasks = document.getElementById("rightSideTasks");
+        leftSideTasks.style.display = "none";
+        rightSideTasks.style.display = "none";
+
+        // For JP23 location, hide washing machine tasks initially
+        if (location === "JP23") {
+            document.getElementById('washing_machine_status').parentElement.style.display = "none";
+            document.getElementById('washing_machine_person').parentElement.style.display = "none";
+        }
+    }
+
+    function handleSideSelection() {
+        var side = document.getElementById("side").value;
+        var leftSideTasks = document.getElementById("leftSideTasks");
+        var rightSideTasks = document.getElementById("rightSideTasks");
+
+        // Show tasks for the selected side
+        if (side === "left") {
+            leftSideTasks.style.display = "block";
+            rightSideTasks.style.display = "none";
+            // Show washing machine tasks for JP23 left side
+            document.getElementById('washing_machine_status').parentElement.style.display = "block";
+            document.getElementById('washing_machine_person').parentElement.style.display = "block";
+        } else if (side === "right") {
+            leftSideTasks.style.display = "none";
+            rightSideTasks.style.display = "block";
+            // Hide washing machine tasks for JP23 right side
+            document.getElementById('washing_machine_status').parentElement.style.display = "none";
+            document.getElementById('washing_machine_person').parentElement.style.display = "none";
+        }
+    }
+
+    document.getElementById("kitchen_late_task").addEventListener("submit", function(event) {
+        var location = document.getElementById("location").value;
+        var side = document.getElementById("side").value;
+        var checkboxes = [];
+        var valid = true;
+
+        // Handle JP23 location
+        if (location === "JP23") {
+            if (side) {
+                if (side === "left") {
+                    checkboxes = document.querySelectorAll('#leftSideTasks input[type="checkbox"]');
+                    var soap_WC = document.getElementById('soap_WC_sufficient').value;
+                    var toilet_paper = document.getElementById('toilet_paper_WC_sufficient').value;
+                    var washingup_liquid = document.getElementById('washingup_liquid_kitchen_sufficient').value;
+                    var blue_roll = document.getElementById('blue_roll_kitchen_sufficient').value;
+
+                    if (!soap_WC || !toilet_paper || !washingup_liquid || !blue_roll) {
+                        event.preventDefault();
+                        alert("Bitte füllen Sie alle Pflichtfelder für JP23 aus.");
+                        valid = false;
+                    }
+                } else if (side === "right") {
+                    checkboxes = document.querySelectorAll('#rightSideTasks input[type="checkbox"]');
+                }
+            }
+        } else if (location === "KP5" || location === "TS17") {
+            checkboxes = document.querySelectorAll('#generalTasks input[type="checkbox"]');
+        }
+
+        // Check for unchecked checkboxes
+        checkboxes.forEach(function(checkbox) {
+            if (!checkbox.checked) {
+                valid = false;
+            }
+        });
+
+        if (!valid) {
+            event.preventDefault();
+            alert("Bitte überprüfen Sie alle Aufgaben, bevor Sie das Formular absenden.");
+        }
+    });
+</script>
+
+
+
+
+</body>
+</html>

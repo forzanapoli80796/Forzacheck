@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Wählen Sie den Laden</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #87ceeb;
+            padding: 20px;
+            margin: 0;
+            height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 20px;
+            background-color: #87ceeb;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            color: #555;
+        }
+        .hidden {
+            display: none;
+        }
+        input[type="submit"] {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .home-button {
+            display: block;
+            width: 100px;
+            margin: 20px auto;
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .home-button:hover {
+            background-color: #218838;
+        }
+        .language-switcher {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .language-switcher a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #007bff;
+            font-size: 16px;
+        }
+        .language-switcher a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <script>
+        var currentLanguage = 'de';
+
+        function switchLanguage(language) {
+            currentLanguage = language;
+            var elements = document.querySelectorAll('[data-lang-en], [data-lang-de]');
+            elements.forEach(function(element) {
+                element.innerText = element.getAttribute('data-lang-' + language);
+            });
+
+            document.documentElement.lang = language;
+            document.querySelector('title').innerText = language === 'de' ? 'Wählen Sie den Laden' : 'Select Store';
+            document.getElementById('store').options[0].innerText = language === 'de' ? '-- Wählen Sie einen Laden --' : '-- Select a Store --';
+            document.querySelector('input[type="submit"]').value = language === 'en' ? 'Submit' : 'Einreichen';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            switchLanguage(currentLanguage);
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1 data-lang-en="Select Store" data-lang-de="Wählen Sie den Laden">Wählen Sie den Laden</h1>
+        <form method="post">
+            {% csrf_token %}
+            <label for="store" data-lang-en="Select Store:" data-lang-de="Laden auswählen:">Laden auswählen:</label>
+            <select name="store" id="store">
+                <option value="">-- Wählen Sie einen Laden --</option>
+                {% for store in stores %}
+                    <option value="{{ store.name }}" {% if selected_store and store.name == selected_store.name %}selected{% endif %}>{{ store.name }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="date" data-lang-en="Select Date:" data-lang-de="Datum auswählen:">Datum auswählen:</label>
+            <input type="date" name="date" id="date" value="{{ selected_date }}">
+
+            <input type="submit" value="Einreichen" data-lang-en="Submit" data-lang-de="Einreichen">
+        </form>
+
+        {% if selected_store %}
+        <div id="dough_amount">
+            <h2 data-lang-en="Weekly Dough Amount" data-lang-de="Wöchentlicher Teigbetrag">Wöchentlicher Teigbetrag</h2>
+            <p>
+                {% if selected_store_latest_dough_amount %}
+                    {{ selected_store_latest_dough_amount }}
+                {% else %}
+                    No data available
+                {% endif %}
+            </p>
+        </div>
+        {% endif %}
+    </div>
+    <a href="{% url 'department_shift_selection' %}" class="home-button" data-lang-en="Home" data-lang-de="Startseite">Startseite</a>
+
+    <div class="language-switcher">
+        <a href="#" onclick="switchLanguage('en')">English</a> | <a href="#" onclick="switchLanguage('de')">Deutsch</a>
+    </div>
+</body>
+</html>

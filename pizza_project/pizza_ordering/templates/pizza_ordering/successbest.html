@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang-en="Thank You" data-lang-de="Danke">Danke</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #87ceeb;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 18px;
+            color: #555;
+        }
+        .home-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        .home-button:hover {
+            background-color: #0056b3;
+        }
+        .language-switcher {
+            text-align: center;
+            margin-top: 20px;
+            width: 100%;
+        }
+        .language-switcher a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #007bff;
+            font-size: 16px;
+        }
+        .language-switcher a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <script>
+        var currentLanguage = 'de';  // Default language
+
+        function switchLanguage(language) {
+            currentLanguage = language;
+            var elements = document.querySelectorAll('[data-lang-en]');
+            elements.forEach(function(element) {
+                element.innerText = element.getAttribute('data-lang-' + language);
+            });
+
+            // Store the selected language
+            localStorage.setItem('selectedLanguage', language);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize language based on URL parameter or localStorage
+            const urlParams = new URLSearchParams(window.location.search);
+            const langParam = urlParams.get('lang') || localStorage.getItem('selectedLanguage') || 'de';
+            switchLanguage(langParam);
+
+            // Add event listeners to language switcher links
+            document.querySelectorAll('.language-switcher a').forEach(link => {
+                link.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    const lang = event.target.dataset.lang;
+                    switchLanguage(lang);
+                    window.location.search = `?lang=${lang}`; // Update URL with language parameter
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1 data-lang-en="Thank You!" data-lang-de="Vielen Dank!">Vielen Dank!</h1>
+    <p data-lang-en="Your submission has been received." data-lang-de="Ihre Einsendung wurde erhalten.">Ihre Einsendung wurde erhalten.</p>
+    <a href="{% url 'department_shift_selection' %}" class="home-button" data-lang-en="Home" data-lang-de="Startseite">Startseite</a>
+
+    <div class="language-switcher">
+        <a href="#" data-lang="en">English</a> | <a href="#" data-lang="de">Deutsch</a>
+    </div>
+</body>
+</html>

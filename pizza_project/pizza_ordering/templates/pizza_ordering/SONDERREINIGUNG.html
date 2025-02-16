@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="de">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sonderreinigung</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #87ceeb;
+            padding: 20px;
+            margin: 0;
+            height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 20px;
+            background-color: #87ceeb;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        input[type="file"],
+        select {
+            width: calc(50% - 12px);
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .language-switcher {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .language-switcher a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #007bff;
+            font-size: 16px;
+        }
+        .language-switcher a:hover {
+            text-decoration: underline;
+        }
+        .home-button {
+            display: block;
+            width: 100px;
+            margin: 20px auto;
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .home-button:hover {
+            background-color: #218838;
+        }
+        .logo-container {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+        .logo {
+            max-width: 150px;
+            height: auto;
+        }
+        .full-width {
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+        input[type="number"] {
+    width: calc(50% - 22px);
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+    </style>
+    <script>
+        function switchLanguage(language) {
+            var elements = document.querySelectorAll('[data-lang-de], [data-lang-en]');
+            elements.forEach(function (el) {
+                var deText = el.getAttribute('data-lang-de');
+                var enText = el.getAttribute('data-lang-en');
+                if (language === 'en') {
+                    el.textContent = enText;
+                } else {
+                    el.textContent = deText;
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+
+    <form method="post" action="{% url 'special_cleaning' %}">
+        <h1 data-lang-de="Sonderreinigung" data-lang-en="Special Cleaning">Sonderreinigung</h1>
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="date" data-lang-de="Datum" data-lang-en="Date">Datum</label>
+            <input type="date" id="date" name="date" required>
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="location" data-lang-en="Select Location" data-lang-de="Filiale auswählen">Filiale auswählen</label>
+            <select id="location" name="location" required>
+                <option value="" disabled selected data-lang-de="wählen" data-lang-en="Select">Wählen</option>
+                <option value="JP23">JP23</option>
+                <option value="KP5">KP5</option>
+                <option value="TS17">TS17</option>
+            </select>
+        </div>
+        <br>
+        <label for="name" data-lang-en="Name" data-lang-de="Name">Name</label>
+        <input type="text" id="name" name="name" placeholder="Dein Vorname" required><br>
+
+        <div class="form-group">
+            <label for="ventilation" data-lang-de="Lüftungsgitter Kühlzelle" data-lang-en="Ventilation Grid (Cold Room)">Lüftungsgitter Kühlzelle</label>
+            <select id="ventilation" name="ventilation" required>
+                <option value="" disabled selected data-lang-de="Wählen" data-lang-en="Select">Wählen</option>
+                <option value="yes" data-lang-de="Ja" data-lang-en="Yes">Ja</option>
+                <option value="no" data-lang-de="Nein" data-lang-en="No">Nein</option>
+            </select>
+        </div>
+        <br>
+
+        <label for="ventilation_rate" data-lang-en="Rating (1-10)" data-lang-de="Bewertung (1-10)">Bewertung (1-10)</label>
+<input type="number" id="ventilation_rate" name="ventilation_rate" min="1" max="10" placeholder="1-10" required>
+
+        <label for="ventilation_image">Upload Image:</label>
+    <input type="file" name="ventilation_image" id="ventilation_image" accept="image/*">
+    <br>
+    <hr>
+    <br>
+    <br>
+
+
+        <div class="form-group">
+            <label for="spiderwebs" data-lang-de="Spinnweben Eingangsbereich" data-lang-en="Cobwebs (Entrance Area)">Spinnweben Eingangsbereich</label>
+            <select id="spiderwebs" name="spiderwebs" required>
+                <option value="" disabled selected data-lang-de="Wählen" data-lang-en="Select">Wählen</option>
+                <option value="yes" data-lang-de="Ja" data-lang-en="Yes">Ja</option>
+                <option value="no" data-lang-de="Nein" data-lang-en="No">Nein</option>
+            </select>
+        </div>
+        <br>
+
+        <label for="spiderwebs_rate" data-lang-en="Rating (1-10)" data-lang-de="Bewertung (1-10)">Bewertung (1-10)</label>
+<input type="number" id="spiderwebs_rate" name="spiderwebs_rate" min="1" max="10" placeholder="1-10" required>
+
+        <label for="spiderwebs_image">Upload Image:</label>
+    <input type="file" name="spiderwebs_image" id="spiderwebs_image" accept="image/*">
+     <br>
+    <hr>
+    <br>
+    <br>
+
+
+        <div class="form-group">
+            <label for="washer" data-lang-de="Waschmaschine Flusensieb reinigen" data-lang-en="Clean Washing Machine Lint Filter">Waschmaschine Flusensieb reinigen</label>
+            <select id="washer" name="washer" required>
+                <option value="" disabled selected data-lang-de="Wählen" data-lang-en="Select">Wählen</option>
+                <option value="yes" data-lang-de="Ja" data-lang-en="Yes">Ja</option>
+                <option value="no" data-lang-de="Nein" data-lang-en="No">Nein</option>
+            </select>
+        </div>
+        <br>
+
+        <label for="washer_rate" data-lang-en="Rating (1-10)" data-lang-de="Bewertung (1-10)">Bewertung (1-10)</label>
+<input type="number" id="washer_rate" name="washer_rate" min="1" max="10" placeholder="1-10" required>
+
+        <label for="washer_image">Upload Image:</label>
+    <input type="file" name="washer_image" id="washer_image" accept="image/*">
+ <br>
+    <hr>
+    <br>
+    <br>
+
+        <div class="form-field">
+            <label for="comments" data-lang-en="Comments" data-lang-de="Kommentare">Kommentare</label>
+            <textarea id="comments" name="comments" rows="4"></textarea>
+        </div><br>
+
+
+
+        <input type="submit" value="Senden" data-lang-de="Senden" data-lang-en="Submit">
+    </form>
+
+    <a href="{% url 'department_shift_selection' %}" class="home-button" data-lang-de="Startseite" data-lang-en="Home">Startseite</a>
+
+    <div class="language-switcher">
+        <a href="#" onclick="switchLanguage('de')">Deutsch</a> | <a href="#" onclick="switchLanguage('en')">English</a>
+    </div>
+
+    <div class="logo-container">
+        <img src="{% static 'images/FORZACHECK1_whie.png' %}" alt="Forzacheck Logo" class="logo">
+    </div>
+
+</body>
+</html>

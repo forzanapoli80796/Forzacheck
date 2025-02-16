@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang-en="Management Selection" data-lang-de="Management Auswahl">Management Auswahl</title>
+    <style>
+        /* Styling remains the same */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #87ceeb;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        form {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        select, input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .hidden {
+            display: none;
+        }
+        .logo {
+            max-width: 450px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        .language-switcher {
+            text-align: center;
+            margin-top: 20px;
+            width: 100%;
+        }
+        .language-switcher a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #007bff;
+            font-size: 16px;
+        }
+        .language-switcher a:hover {
+            text-decoration: underline;
+        }
+        .home-button {
+            display: block;
+            width: 100px;
+            margin: 20px auto;
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .home-button:hover {
+            background-color: #218838;
+        }
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+    <script>
+        var currentLanguage = 'de';  // Default language
+
+        function switchLanguage(language) {
+            currentLanguage = language;
+            var elements = document.querySelectorAll('[data-lang-en]');
+            elements.forEach(function(element) {
+                element.innerText = element.getAttribute('data-lang-' + language);
+            });
+
+            // Update dynamically added options
+            var selects = document.querySelectorAll('select');
+            selects.forEach(function(select) {
+                var options = select.querySelectorAll('option');
+                options.forEach(function(option) {
+                    if (option.getAttribute('data-lang-en')) {
+                        option.textContent = option.getAttribute('data-lang-' + language);
+                    }
+                });
+            });
+
+            // Update submit button value
+            var submitButton = document.querySelector('input[type="submit"]');
+            if (submitButton.getAttribute('data-lang-en')) {
+                submitButton.value = submitButton.getAttribute('data-lang-' + language);
+            }
+
+            // Store the selected language
+            localStorage.setItem('selectedLanguage', language);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize language based on URL parameter or localStorage
+            const urlParams = new URLSearchParams(window.location.search);
+            const langParam = urlParams.get('lang') || localStorage.getItem('selectedLanguage') || 'de';
+            switchLanguage(langParam);
+
+            // Add event listeners to language switcher links
+            document.querySelectorAll('.language-switcher a').forEach(link => {
+                link.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    const lang = event.target.dataset.lang;
+                    switchLanguage(lang);
+                    window.location.search = `?lang=${lang}`; // Update URL with language parameter
+                });
+            });
+
+            // Show E-Bikes option only when "Cleanliness Order" is selected
+            var categorySelect = document.getElementById('category');
+            var eBikesOption = document.getElementById('e-bikes-option');
+            categorySelect.addEventListener('change', function() {
+                if (categorySelect.value === 'cleanliness_order') {
+                    eBikesOption.classList.remove('hidden');
+                } else {
+                    eBikesOption.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <img src="{% static 'images/FORZACHECK1_whie.png' %}" alt="Forzacheck Logo" class="logo">
+
+    <form method="post" action="{% url 'management_selection' %}">
+        {% csrf_token %}
+        <h1 data-lang-en="Management Selection" data-lang-de="Management Kategr">Management Kategr</h1>
+
+        <!-- Category Selection -->
+        <label for="category" data-lang-en="Select Management Category" data-lang-de="Was wird überprüft?">Was wird überprüft?</label>
+        <select id="category" name="category" required>
+            <option value="" disabled selected data-lang-en="Select a Category" data-lang-de="Wählen Sie eine Kategorie">Wählen Sie eine Kategorie</option>
+            <option value="cleanliness_order" data-lang-en="Cleanliness Order" data-lang-de="Sauberkeitsordnung">Sauberkeitsordnung</option>
+            <option value="review_checklists" data-lang-en="Review Checklists" data-lang-de="Überprüfung-Checklisten">Überprüfung-Checklisten</option>
+        </select>
+
+        <!-- Department Selection -->
+        <label for="department" data-lang-en="Select Department" data-lang-de="Abteilung">Abteilung</label>
+        <select id="department" name="department" required>
+            <option value="" disabled selected data-lang-en="Select a Department" data-lang-de="Wählen Sie eine Abteilung">Wählen Sie eine Abteilung</option>
+            <option value="Kitchen" data-lang-en="Kitchen" data-lang-de="Küche">Küche</option>
+            <option value="Terminal" data-lang-en="Terminal" data-lang-de="Terminal">Terminal</option>
+            <option value="Storage/cellar/garage" data-lang-en="Storage/Cellar/Garage" data-lang-de="Lager/Keller/Garage">Lager/Keller/Garage</option>
+            <option value="Apartment" data-lang-en="Apartment" data-lang-de="Wohnung">Wohnung</option>
+            <!-- E-Bikes Option (Hidden by default) -->
+            <option id="e-bikes-option" value="E-Bikes" class="hidden" data-lang-en="E-Bikes" data-lang-de="E-Bikes">E-Bikes</option>
+            <option value="Special Cleaning" data-lang-en="Special Cleaning" data-lang-de="Sonderreinigung">Sonderreinigung</option>
+
+        </select>
+
+        <input type="submit" value="Submit" data-lang-en="Submit" data-lang-de="Senden">
+
+        {% if error_message %}
+            <div class="error-message">{{ error_message }}</div>
+        {% endif %}
+    </form>
+
+    <a href="{% url 'login' %}" class="home-button" data-lang-en="Home" data-lang-de="Startseite">Startseite</a>
+
+    <div class="language-switcher">
+        <a href="#" data-lang="en">English</a> | <a href="#" data-lang="de">Deutsch</a>
+    </div>
+</body>
+</html>

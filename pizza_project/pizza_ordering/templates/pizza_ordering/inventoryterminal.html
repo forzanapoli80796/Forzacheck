@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="de" xmlns="http://www.w3.org/1999/html">
+ {% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Terminal</title>
+    <style>
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #87ceeb;
+    padding: 20px;
+    margin: 0;
+    height: 100vh; /* Ensure body covers full viewport height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+h1 {
+    text-align: center;
+    color: #fff; /* White letters */
+    margin-bottom: 20px;
+    background-color: #87ceeb; /* Blue background */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+form {
+    max-width: 600px;
+    width: 100%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select {
+    width: 100%; /* Full width */
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+input[readonly] {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+}
+
+input[type="submit"] {
+    width: 100%;
+    padding: 15px;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+.language-switcher {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.language-switcher a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: #007bff;
+    font-size: 16px;
+}
+
+.language-switcher a:hover {
+    text-decoration: underline;
+}
+
+.home-button {
+    display: block;
+    width: 100px;
+    margin: 20px auto;
+    padding: 10px 15px;
+    background-color: #28a745;
+    color: #fff;
+    text-align: center;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.home-button:hover {
+    background-color: #218838;
+}
+
+.section-title {
+    background-color: #87ceeb;
+    padding: 10px;
+    color: white;
+    font-size: 1.2em;
+    margin-top: 20px;
+    border-radius: 5px;
+    text-align: center;
+    width: 100%;
+}
+
+.logo-container {
+    text-align: center;
+    margin-bottom: 10px; /* Reduced margin for a compact layout */
+}
+
+.logo {
+    max-width: 150px; /* Smaller size for compact logo */
+    height: auto;
+}
+
+.full-width {
+    width: 100%;
+    box-sizing: border-box; /* ensures padding and border are included in the width */
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column; /* stacks label and input vertically */
+    width: 100%;
+    margin-bottom: 15px;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <form action="{% url 'inventory_terminal' %}" method="post">
+        {% csrf_token %}
+        <h1 data-lang-en="Inventory Terminal" data-lang-de="Warenbestand Non-Food">Warenbestand Non-Food</h1>
+        <div class="form-field">
+            <label for="date" data-lang-en="Date" data-lang-de="Datum">Datum</label>
+            <input type="date" id="date" name="date" required>
+        </div><br>
+
+        <div class="form-field">
+            <label for="location" data-lang-en="Select Location" data-lang-de="Standort wählen">Standort wählen</label>
+            <select name="location" id="location">
+                <option value="select" data-lang-en="select" data-lang-de="wählen">wählen</option>
+                <option value="JP23" data-lang-en="JP23" data-lang-de="JP23">JP23</option>
+                <option value="KP5" data-lang-en="KP5" data-lang-de="KP5">KP5</option>
+                <option value="TS17" data-lang-en="TS17" data-lang-de="TS17">TS17</option>
+            </select>
+        </div><br>
+
+        <div class="form-field">
+            <label for="name" data-lang-en="Name" data-lang-de="Name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Dein Vorname" required>
+        </div><br>
+
+        <!-- PERGANO Section -->
+        <div class="section-title" data-lang-en="PERGANO" data-lang-de="PERGANO">PERGANO</div><br>
+
+        <label for="pizzakarton" data-lang-en="Pizza Box (Unit 100 pcs)" data-lang-de="Pizzakarton (Einheit 100 St.)">Pizzakarton (Einheit 100 St.)</label>
+        <input type="number" id="pizzakarton" name="pizzakarton" min="0" required>
+
+        <label for="pizzapapier" data-lang-en="Pizza Paper (Unit 1000 pcs)" data-lang-de="Pizzapapier (Einheit 1000 St.)">Pizzapapier (Einheit 1000 St.)</label>
+        <input type="number" id="pizzapapier" name="pizzapapier" min="0" required>
+
+        <label for="salatschale" data-lang-en="Salad Bowl (Unit 50 pcs)" data-lang-de="Salatschale (Einheit 50 St.)">Salatschale (Einheit 50 St.)</label>
+        <input type="number" id="salatschale" name="salatschale" min="0" required>
+
+        <label for="salatschale_deckel" data-lang-en="Salad Bowl Lid (Unit 50 pcs)" data-lang-de="Salatschale Deckel (Einheit 50 St.)">Salatschale Deckel (Einheit 50 St.)</label>
+        <input type="number" id="salatschale_deckel" name="salatschale_deckel" min="0" required>
+
+        <label for="dressingschale" data-lang-en="Dressing Bowl (Unit 100 pcs)" data-lang-de="Dressingschale (Einheit 100 St.)">Dressingschale (Einheit 100 St.)</label>
+        <input type="number" id="dressingschale" name="dressingschale" min="0" required>
+
+        <label for="dressingschale_deckel" data-lang-en="Dressing Bowl Lid (Unit 100 pcs)" data-lang-de="Dressingschale Deckel (Einheit 100 St.)">Dressingschale Deckel (Einheit 100 St.)</label>
+        <input type="number" id="dressingschale_deckel" name="dressingschale_deckel" min="0" required>
+
+        <label for="serviette_gast" data-lang-en="Guest Napkin (Unit 100 pcs)" data-lang-de="Serviette Gast (Einheit 100 St.)">Serviette Gast (Einheit 100 St.)</label>
+        <input type="number" id="serviette_gast" name="serviette_gast" min="0" required>
+
+        <label for="dip_becher" data-lang-en="Dip Cup (Unit)" data-lang-de="Dip Becher (Einheit)">Dip Becher (Einheit)</label>
+        <input type="number" id="dip_becher" name="dip_becher" min="0" required>
+
+        <label for="dip_deckel" data-lang-en="Dip Lid (Unit)" data-lang-de="Dip Deckel (Einheit)">Dip Deckel (Einheit)</label>
+        <input type="number" id="dip_deckel" name="dip_deckel" min="0" required>
+
+        <!-- AMAZON Section -->
+        <div class="section-title" data-lang-en="AMAZON" data-lang-de="AMAZON">AMAZON</div><br>
+
+        <label for="bonrollen" data-lang-en="Receipt Rolls (pcs)" data-lang-de="Bonrollen (Stück)">Bonrollen (Stück)</label>
+        <input type="number" id="bonrollen" name="bonrollen" min="0" required>
+
+        <label for="kugelschreiber" data-lang-en="Ballpoint Pens (pcs)" data-lang-de="Kugelschreiber (Stück)">Kugelschreiber (Stück)</label>
+        <input type="number" id="kugelschreiber" name="kugelschreiber" min="0" required>
+
+        <label for="textmarker_gelb" data-lang-en="Yellow Highlighter (pcs)" data-lang-de="Textmarker gelb (Stück)">Textmarker gelb (Stück)</label>
+        <input type="number" id="textmarker_gelb" name="textmarker_gelb" min="0" required>
+
+        <label for="filzstift_schwarz" data-lang-en="Black Felt Tip Pen (pcs)" data-lang-de="Filzstift schwarz (Stück)">Filzstift schwarz (Stück)</label>
+        <input type="number" id="filzstift_schwarz" name="filzstift_schwarz" min="0" required>
+
+        <label for="kellnerblock" data-lang-en="Waiter's Pad (pcs)" data-lang-de="Kellnerblock (Stück)">Kellnerblock (Stück)</label>
+        <input type="number" id="kellnerblock" name="kellnerblock" min="0" required>
+
+        <label for="tesa_rollen" data-lang-en="Tape Rolls (pcs)" data-lang-de="Tesa Rollen (Stück)">Tesa Rollen (Stück)</label>
+        <input type="number" id="tesa_rollen" name="tesa_rollen" min="0" required>
+
+        <label for="etiketten_tiramisu" data-lang-en="Tiramisu Label (pcs)" data-lang-de="Etiketten Warenauszeichner (Stück)">Etiketten Warenauszeichner (Stück)</label>
+        <input type="number" id="etiketten_tiramisu" name="etiketten_tiramisu" min="0" required>
+        <label for="etiketten_gn" data-lang-en="Labels Date GN (Unit)" data-lang-de="Etiketten Datum GN (Stück)">Etiketten Datum GN (Stück)</label>
+<input type="number" id="etiketten_gn" name="etiketten_gn" min="0" required>
+
+<label for="aufkleber_rot" data-lang-en="Red Stickers MHD (Unit)" data-lang-de="Aufkleber rot MHD (Stück)">Aufkleber rot MHD (Stück)</label>
+<input type="number" id="aufkleber_rot" name="aufkleber_rot" min="0" required>
+
+<label for="einwegloeffel" data-lang-en="Disposable Spoon (Unit)" data-lang-de="Einweglöffel (Stück)">Einweglöffel (Stück)</label>
+<input type="number" id="einwegloeffel" name="einwegloeffel" min="0" required>
+
+<label for="einweggabel" data-lang-en="Disposable Fork (Unit)" data-lang-de="Einweggabel (Stück)">Einweggabel (Stück)</label>
+<input type="number" id="einweggabel" name="einweggabel" min="0" required>
+
+<label for="desinfektionsmittel" data-lang-en="Disinfectant (Unit)" data-lang-de="Desinfektionsmittel (Einheit)">Desinfektionsmittel (Einheit)</label>
+<input type="number" id="desinfektionsmittel" name="desinfektionsmittel" min="0" required>
+
+<label for="salz_spuelmaschine" data-lang-en="Dishwasher Salt (Unit)" data-lang-de="Salz Spülmaschine (Einheit)">Salz Spülmaschine (Einheit)</label>
+<input type="number" id="salz_spuelmaschine" name="salz_spuelmaschine" min="0" required>
+
+<label for="trueffel_mayo" data-lang-en="Truffle Mayo (Bottle)" data-lang-de="Trüffel Mayo (Flasche)">Trüffel Mayo (Flasche)</label>
+<input type="number" id="trueffel_mayo" name="trueffel_mayo" min="0" required>
+
+<label for="dip_tuete" data-lang-en="Dip Bag (Unit 50 pcs)" data-lang-de="Dip Tüte (Einheit 50 St.)">Dip Tüte (Einheit 50 St.)</label>
+<input type="number" id="dip_tuete" name="dip_tuete" min="0" required>
+
+<label for="zwiebel_chutney" data-lang-en="Onion Chutney (Jar)" data-lang-de="Zwiebel Chutney (Glas)">Zwiebel Chutney (Glas)</label>
+<input type="number" id="zwiebel_chutney" name="zwiebel_chutney" min="0" required>
+
+<label for="kuerbiskerne" data-lang-en="Pumpkin Seeds (Bag)" data-lang-de="Kürbiskerne (Tüte)">Kürbiskerne (Tüte)</label>
+<input type="number" id="kuerbiskerne" name="kuerbiskerne" min="0" required>
+
+<label for="pflaster" data-lang-en="Bandage (pcs)" data-lang-de="Pflaster (Stück)">Pflaster (Stück)</label>
+<input type="number" id="pflaster" name="pflaster" min="0" required>
+
+        <!-- FLYER Section -->
+        <div class="section-title" data-lang-en="FLYER" data-lang-de="FLYER">FLYER</div><br>
+
+        <label for="speisekarte_blau" data-lang-en="Menu Blue (Unit)" data-lang-de="Speisekarte blau (Einheit)">Speisekarte blau (Einheit)</label>
+        <input type="number" id="speisekarte_blau" name="speisekarte_blau" min="0" required>
+
+        <label for="menu_gelb" data-lang-en="Menu Yellow (Unit)" data-lang-de="Menú gelb (Einheit)">Menú gelb (Einheit)</label>
+        <input type="number" id="menu_gelb" name="menu_gelb" min="0" required>
+
+        <div class="form-field">
+            <label for="comments" data-lang-en="Comments" data-lang-de="Kommentare">Kommentare</label>
+            <textarea id="comments" name="comments" rows="4"></textarea>
+        </div><br>
+
+        <input type="submit" value="Senden" data-lang-en="Submit" data-lang-de="Senden">
+    </form>
+</div>
+<a href="{% url 'department_shift_selection' %}" class="home-button" data-lang-en="Home" data-lang-de="Startseite">Startseite</a>
+ <div class="language-switcher">
+    <a href="#" onclick="switchLanguage('en')">English</a> | <a href="#" onclick="switchLanguage('de')">Deutsch</a>
+</div>
+ <div class="logo-container">
+        <img src="{% static 'images/FORZACHECK1_whie.png' %}" alt="Forzacheck Logo" class="logo">
+    </div>
+
+<script>
+    function switchLanguage(language) {
+        document.querySelectorAll('[data-lang-en]').forEach(element => {
+            if (language === 'en') {
+                element.innerHTML = element.getAttribute('data-lang-en');
+            } else {
+                element.innerHTML = element.getAttribute('data-lang-de');
+            }
+        });
+    }
+
+    // Set default language as German
+    switchLanguage('de');
+</script>
+</body>
+</html>

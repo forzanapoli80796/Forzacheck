@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cheese Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        form {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+            color: #333333;
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+            color: #555555;
+        }
+        input, select {
+            width: calc(100% - 10px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        input[readonly] {
+            background-color: #e9ecef;
+            cursor: not-allowed;
+        }
+        input:focus, select:focus {
+            border-color: #87ceeb;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: #87ceeb;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #6aaed9;
+        }
+    </style>
+    <script>
+        function fetchDoughAmount() {
+            var storeId = document.getElementById("store").value;
+            if (storeId) {
+                fetch(`/get-dough-amount/${storeId}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById("doughAmount").value = data.dough_amount;
+                        calculateCheese();
+                    })
+                    .catch(error => console.error("Error fetching dough amount:", error));
+            }
+        }
+
+        function calculateCheese() {
+            var doughAmount = parseFloat(document.getElementById("doughAmount").value) || 0;
+            var calculatedCheese = doughAmount * 70;
+            document.getElementById("calculatedCheese").value = calculatedCheese.toFixed(2);
+            calculateFinalResult();
+        }
+
+        function calculateFinalResult() {
+            var calculatedCheese = parseFloat(document.getElementById("calculatedCheese").value) || 0;
+            var currentStock = parseFloat(document.getElementById("currentStock").value) || 0;
+            var finalResult = calculatedCheese - currentStock;
+            document.getElementById("finalResult").value = finalResult.toFixed(2);
+        }
+    </script>
+</head>
+<body>
+    <form>
+        <h1>Cheese Calculator</h1>
+        <!-- Store selection -->
+        <label for="store">Select Store:</label>
+        <select id="store" name="store" onchange="fetchDoughAmount()">
+            <option value="">Select a store</option>
+            {% for store in stores %}
+                <option value="{{ store.id }}">{{ store.name }}</option>
+            {% endfor %}
+        </select>
+
+        <!-- Dough amount (fetched automatically based on store) -->
+        <label for="doughAmount">Dough Amount (for today):</label>
+        <input type="number" id="doughAmount" name="doughAmount" readonly>
+
+        <!-- Calculated cheese amount -->
+        <label for="calculatedCheese">Calculated Cheese Amount:</label>
+        <input type="number" id="calculatedCheese" name="calculatedCheese" readonly>
+
+        <!-- Current stock input by employee -->
+        <label for="currentStock">Enter Current Stock Value:</label>
+        <input type="number" id="currentStock" name="currentStock" oninput="calculateFinalResult()">
+
+        <!-- Final result calculation -->
+        <label for="finalResult">Final Result (Cheese Needed):</label>
+        <input type="number" id="finalResult" name="finalResult" readonly>
+    </form>
+</body>
+</html>

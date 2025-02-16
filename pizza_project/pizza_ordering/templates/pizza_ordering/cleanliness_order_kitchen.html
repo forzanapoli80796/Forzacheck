@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cleanliness and Order - Kitchen</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #87ceeb;
+            padding: 20px;
+            margin: 0;
+            height: 100vh; /* Ensure body covers full viewport height */
+        }
+        h1 {
+            text-align: center;
+            color: #fff; /* White letters */
+            margin-bottom: 20px;
+            background-color: #87ceeb; /* Blue background */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            color: #555;
+        }
+        input[type="date"],
+        input[type="text"],
+        select {
+            width: calc(50% - 22px); /* Adjust for border width */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            box-sizing: border-box; /* Ensures padding doesn't affect width */
+        }
+        input[type="checkbox"] {
+            margin-right: 10px;
+            width: auto;
+        }
+        input[type="submit"] {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .task-list {
+            margin-top: 20px;
+        }
+        .task-list h2 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .task-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .task-item label {
+            margin: 0;
+            color: #666;
+        }
+        .home-button {
+            display: block;
+            width: 100px;
+            margin: 20px auto;
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .home-button:hover {
+            background-color: #218838;
+        }
+        .language-switcher {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .language-switcher a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #007bff;
+            font-size: 16px;
+        }
+        .language-switcher a:hover {
+            text-decoration: underline;
+        }
+        textarea {
+            width: calc(100% - 22px); /* Adjust for border width */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            box-sizing: border-box; /* Ensures padding doesn't affect width */
+        }
+        .logo-container {
+            text-align: center;
+            margin-bottom: 5px; /* Reduced margin */
+        }
+        .logo {
+            max-width: 150px; /* Smaller size */
+            height: auto;
+        }
+        .hidden {
+            display: none;
+        }
+        input[type="number"] {
+    width: calc(50% - 22px);
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+    </style>
+    <script>
+        var currentLanguage = 'de';  // Default language
+
+        function switchLanguage(language) {
+            currentLanguage = language;
+            var elements = document.querySelectorAll('[data-lang-en]');
+            elements.forEach(function(element) {
+                element.innerText = element.getAttribute('data-lang-' + language);
+            });
+
+            // Update dynamically added options
+            var selects = document.querySelectorAll('select');
+            selects.forEach(function(select) {
+                var options = select.querySelectorAll('option');
+                options.forEach(function(option) {
+                    if (option.getAttribute('data-lang-en')) {
+                        option.textContent = option.getAttribute('data-lang-' + language);
+                    }
+                });
+            });
+
+            // Update submit button value
+            var submitButton = document.querySelector('input[type="submit"]');
+            if (submitButton.getAttribute('data-lang-en')) {
+                submitButton.value = submitButton.getAttribute('data-lang-' + language);
+            }
+
+            // Store the selected language
+            localStorage.setItem('selectedLanguage', language);
+        }
+
+        function getCalendarWeek(date) {
+            const currentDate = new Date(date);
+            const startDate = new Date(currentDate.getFullYear(), 0, 1);
+            const days = Math.floor((currentDate - startDate) / (24 * 60 * 60 * 1000));
+            const weekNumber = Math.ceil((days + startDate.getDay() + 1) / 7);
+            return weekNumber;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const dateInput = document.getElementById('date');
+            const weekDisplay = document.getElementById('week-display');
+            const weekInput = document.getElementById('week');
+
+            dateInput.addEventListener('change', function() {
+                const weekNumber = getCalendarWeek(dateInput.value);
+                weekDisplay.textContent = `Calendar Week: ${weekNumber}`;
+                weekInput.value = weekNumber;
+                dateInput.classList.add('hidden');
+                weekDisplay.classList.remove('hidden');
+            });
+
+            // Initialize language based on localStorage or default to German
+            const savedLanguage = localStorage.getItem('selectedLanguage') || 'de';
+            switchLanguage(savedLanguage);
+
+            // Add event listeners to language switcher links
+            document.querySelectorAll('.language-switcher a').forEach(link => {
+                link.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    const lang = event.target.dataset.lang;
+                    switchLanguage(lang);
+                    window.location.search = `?lang=${lang}`; // Update URL with language parameter
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+
+    <form action="{% url 'cleanliness_order_kitchen' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <h1 data-lang-en="Cleanliness and Order - Kitchen" data-lang-de="Sauberkeit und Ordnung - Küche">Cleanliness and Order - Kitchen</h1>
+        <label for="date" data-lang-en="Select Date" data-lang-de="KW der aktuellen Woche auswählen">KW der aktuellen Woche auswählen</label>
+        <input type="date" id="date" name="date" required>
+
+        <p id="week-display" class="calendar-week hidden" data-lang-en="Calendar Week: " data-lang-de="Kalenderwoche: ">Kalenderwoche: </p>
+        <input type="hidden" id="week" name="week">
+
+        <label for="location" data-lang-en="Select Location" data-lang-de="Standort wählen">Standort wählen</label>
+        <select name="location" id="location" required>
+            <option value="" disabled selected data-lang-en="select" data-lang-de="wählen">wählen</option>
+            <option value="JP23" data-lang-en="JP23" data-lang-de="JP23">JP23</option>
+            <option value="KP5" data-lang-en="KP5" data-lang-de="KP5">KP5</option>
+            <option value="TS17" data-lang-en="TS17" data-lang-de="TS17">TS17</option>
+        </select>
+
+        <label for="name" data-lang-en="Name" data-lang-de="Name">Name</label>
+        <input type="text" id="name" name="name" placeholder="Dein Vorname" required>
+
+        <label for="tiles" data-lang-en="Tiles" data-lang-de="Fliesen">Tiles</label>
+        <select id="tiles" name="tiles" required>
+            <option value="select" data-lang-en="select" data-lang-de="wählen">wählen</option>
+            <option value="good" data-lang-en="Good" data-lang-de="Gut">Good</option>
+            <option value="poor" data-lang-en="Poor" data-lang-de="Schlecht">Poor</option>
+        </select>
+         <textarea id="tiles_comment" name="tiles_comment" placeholder="Kommentar für Fliesen"></textarea>
+          <label for="tiles_rating" data-lang-en="Rating (1-10)" data-lang-de="Bewertung (1-10)">Rating (1-10)</label>
+<input type="number" id="tiles_rating" name="tiles_rating" min="1" max="10" placeholder="1-10" required>
+
+<label for="tiles_image" data-lang-en="Upload Image" data-lang-de="Bild hochladen">Upload Image</label>
+<input type="file" id="tiles_image" name="tiles_image" accept="image/*">
+<br>
+<br>
+<hr>
+<br>
+
+
+        <label for="tables_downstairs" data-lang-en="Tables downstairs" data-lang-de="Tische im Erdgeschoss">Tables downstairs</label>
+        <select id="tables_downstairs" name="tables_downstairs" required>
+            <option value="select" data-lang-en="select" data-lang-de="wählen">wählen</option>
+            <option value="good" data-lang-en="Good" data-lang-de="Gut">Good</option>
+            <option value="poor" data-lang-en="Poor" data-lang-de="Schlecht">Poor</option>
+        </select>
+        <textarea id="tables_downstairs_comment" name="tables_downstairs_comment" placeholder="Kommentar für Tische im Erdgeschoss"></textarea>
+        <input type="number" id="tables_downstairs_rating" name="tables_downstairs_rating" min="1" max="10" placeholder="1-10" required>
+        <label for="tables_downstairs_image" data-lang-en="Upload Image" data-lang-de="Bild hochladen">Upload Image</label>
+<input type="file" id="tables_downstairs_image" name="tables_downstairs_image" accept="image/*">
+<br>
+<br>
+<hr>
+<br>
+
+
+        <label for="refrigerators_back" data-lang-en="Refrigerators at the back" data-lang-de="Kühlschränke hinten">Refrigerators at the back</label>
+        <select id="refrigerators_back" name="refrigerators_back" required>
+            <option value="select" data-lang-en="select" data-lang-de="wählen">wählen</option>
+            <option value="good" data-lang-en="Good" data-lang-de="Gut">Good</option>
+            <option value="poor" data-lang-en="Poor" data-lang-de="Schlecht">Poor</option>
+        </select>
+        <textarea id="refrigerators_back_comment" name="refrigerators_back_comment" placeholder="Kommentar für Kühlschränke hinten"></textarea>
+        <input type="number" id="refrigerators_back_rating" name="refrigerators_back_rating" min="1" max="10" placeholder="1-10" required>
+        <label for="refrigerators_back_image" data-lang-en="Upload Image" data-lang-de="Bild hochladen">Upload Image</label>
+<input type="file" id="refrigerators_back_image" name="refrigerators_back_image" accept="image/*">
+<br>
+<br>
+<hr>
+<br>
+
+
+        <label for="bottom_sink" data-lang-en="Bottom sink" data-lang-de="Untere Spüle">Bottom sink</label>
+        <select id="bottom_sink" name="bottom_sink" required>
+            <option value="select" data-lang-en="select" data-lang-de="wählen">wählen</option>
+            <option value="good" data-lang-en="Good" data-lang-de="Gut">Good</option>
+            <option value="poor" data-lang-en="Poor" data-lang-de="Schlecht">Poor</option>
+        </select>
+        <textarea id="bottom_sink_comment" name="bottom_sink_comment" placeholder="Kommentar für Untere Spüle"></textarea>
+         <label for="bottom_sink_rating" data-lang-en="Rate Bottom Sink (1-10)" data-lang-de="Untere Spüle bewerten (1-10)">Rate Bottom Sink (1-10)</label>
+<input type="number" id="bottom_sink_rating" name="bottom_sink_rating" min="1" max="10" placeholder="1-10" required>
+        <label for="bottom_sink_image" data-lang-en="Upload Image" data-lang-de="Bild hochladen">Upload Image</label>
+<input type="file" id="bottom_sink_image" name="bottom_sink_image" accept="image/*">
+<br>
+<br>
+<hr>
+<br>
+
+
+        <label for="extractor_hood" data-lang-en="Extractor hood" data-lang-de="Dunstabzugshaube">Extractor hood</label>
+        <select id="extractor_hood" name="extractor_hood" required>
+            <option value="select" data-lang-en="select" data-lang-de="wählen">wählen</option>
+            <option value="good" data-lang-en="Good" data-lang-de="Gut">Good</option>
+            <option value="poor" data-lang-en="Poor" data-lang-de="Schlecht">Poor</option>
+        </select>
+        <textarea id="extractor_hood_comment" name="extractor_hood_comment" placeholder="Kommentar für Dunstabzugshaube"></textarea>
+        <label for="extractor_hood_rating" data-lang-en="Rate Extractor Hood (1-10)" data-lang-de="Dunstabzugshaube bewerten (1-10)">Rate Extractor Hood (1-10)</label>
+<input type="number" id="extractor_hood_rating" name="extractor_hood_rating" min="1" max="10" placeholder="1-10" required>
+        <label for="extractor_hood_image" data-lang-en="Upload Image" data-lang-de="Bild hochladen">Upload Image</label>
+<input type="file" id="extractor_hood_image" name="extractor_hood_image" accept="image/*">
+<br>
+<br>
+<hr>
+<br>
+
+
+        <label for="refrigerator" data-lang-en="Refrigerator" data-lang-de="Kühlschrank">Refrigerator</label>
+        <select id="refrigerator" name="refrigerator" required>
+            <option value="select" data-lang-en="select" data-lang-de="wählen">wählen</option>
+            <option value="good" data-lang-en="Good" data-lang-de="Gut">Good</option>
+            <option value="poor" data-lang-en="Poor" data-lang-de="Schlecht">Poor</option>
+        </select>
+            <textarea id="refrigerator_comment" name="refrigerator_comment" placeholder="Kommentar für Kühlschrank"></textarea>
+            <label for="refrigerator_rating" data-lang-en="Rate Refrigerator (1-10)" data-lang-de="Kühlschrank bewerten (1-10)">Rate Refrigerator (1-10)</label>
+<input type="number" id="refrigerator_rating" name="refrigerator_rating" min="1" max="10" placeholder="1-10" required>
+
+        <label for="refrigerator_image" data-lang-en="Upload Image" data-lang-de="Bild hochladen">Upload Image</label>
+<input type="file" id="refrigerator_image" name="refrigerator_image" accept="image/*">
+<br>
+<br>
+<hr>
+<br>
+
+
+        <label for="kav" data-lang-en="KAV" data-lang-de="KAV">KAV</label>
+        <select id="kav" name="kav" required>
+            <option value="select" data-lang-en="select" data-lang-de="wählen">wählen</option>
+            <option value="good" data-lang-en="Good" data-lang-de="Gut">Good</option>
+            <option value="poor" data-lang-en="Poor" data-lang-de="Schlecht">Poor</option>
+        </select>
+        <textarea id="kav_comment" name="kav_comment" placeholder="Kommentar für KAV"></textarea>
+        <label for="kav_rating" data-lang-en="Rate KAV (1-10)" data-lang-de="KAV bewerten (1-10)">Rate KAV (1-10)</label>
+<input type="number" id="kav_rating" name="kav_rating" min="1" max="10" placeholder="1-10" required>
+        <label for="kav_image" data-lang-en="Upload Image" data-lang-de="Bild hochladen">Upload Image</label>
+<input type="file" id="kav_image" name="kav_image" accept="image/*">
+<br>
+<br>
+<hr>
+<br>
+
+
+        <label for="measures" data-lang-en="other information" data-lang-de="Sonstiges">Sonstiges</label>
+        <textarea id="measures" name="measures" rows="4"  required></textarea>
+
+        <input type="submit" value="Submit" data-lang-en="Submit" data-lang-de="senden">
+    </form>
+    <a href="{% url 'management_selection' %}" class="home-button" data-lang-en="Home" data-lang-de="Startseite">Startseite</a>
+
+    <div class="language-switcher">
+        <a href="#" onclick="switchLanguage('en')" data-lang="en">English</a> | <a href="#" onclick="switchLanguage('de')" data-lang="de">Deutsch</a>
+    </div>
+
+    <div class="logo-container">
+        <img src="{% static 'images/FORZACHECK1_whie.png' %}" alt="Forzacheck Logo" class="logo">
+    </div>
+</body>
+</html>
